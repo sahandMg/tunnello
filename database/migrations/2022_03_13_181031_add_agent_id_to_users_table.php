@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddDeviceKeyToUsersTable extends Migration
+class AddAgentIdToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,8 @@ class AddDeviceKeyToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('device_key')->after('password')->nullable();
+            $table->unsignedBigInteger('agent_id')->nullable()->after('password');
+            $table->foreign('agent_id')->references('id')->on('agents')->onDelete('cascade');
         });
     }
 
@@ -26,7 +27,7 @@ class AddDeviceKeyToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('device_key');
+            $table->dropConstrainedForeignId('agent_id');
         });
     }
 }

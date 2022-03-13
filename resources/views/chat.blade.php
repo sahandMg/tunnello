@@ -73,7 +73,7 @@
 
         function sendNotif(sender_name, message, recp_id) {
             axios.post('/send-web-notification', {title: 'New Message From '+ sender_name, body:message, recipient:recp_id}).catch(function (err) {
-                alert(err.response);
+                console.dir(err.response);
             })
         }
 
@@ -148,11 +148,11 @@
                             alert('Token stored.');
                         },
                         error: function (error) {
-                            alert(error);
+                            console.dir(error);
                         },
                     });
                 }).catch(function (error) {
-                alert(error);
+                console.dir(error);
             });
         }
         messaging.onMessage(function (payload) {

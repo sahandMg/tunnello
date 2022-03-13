@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Jenssegers\Agent\Agent;
+use  \App\Models\Agent as AgentModel;
 
 class ChatController extends Controller
 {
@@ -27,6 +29,17 @@ class ChatController extends Controller
         $user_channels = User::query()->where('id',  '!=', Auth::id())->get()->pluck('id')->unique()->values()->map(function ($id) {
             return channelId(Auth::id(), $id);
         });
+        $agent = new Agent();
+        $agent_record = AgentModel::query()
+            ->where('os', $agent->device())
+            ->where('browser', $agent->browser())
+            ->where('user_id', Auth::id())
+            ->firstOrCreate([
+                'os' => $agent->device(),
+                'browser' => $agent->browser(),
+                'user_id' => Auth::id()
+        ]);
+        Auth::user()->update(['agent_id' => $agent_record->id]);
         return view('chat', compact('auth_user_messages', 'users', 'user_channels'));
     }
 
