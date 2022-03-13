@@ -11,10 +11,13 @@
 
             </div>
         </div>
-        <div class="row col-md-8 mx-auto">
-            <ul id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans-bold; font-size: 20px;">
+        <div class="row col-12 col-md-8 mx-auto mt-1">
+            <ul class="row" id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans-bold; font-size: 20px;">
                 @foreach($users as $user)
-                        <input type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)"><label for="{{$user->id}}">{{$user->name}}</label>
+                    <div class="form-check col-4">
+                        <input class="form-check-input" type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)">
+                        <label class="form-check-label" for="{{$user->id}}">{{$user->name}}</label>
+                    </div>
                 @endforeach
             </ul>
         </div>
