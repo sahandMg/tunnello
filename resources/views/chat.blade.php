@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="row col-md-6 mx-auto">
-            <ul id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans; font-size: 20px;">
+            <ul id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans-bold; font-size: 20px;">
                 @foreach($users as $user)
                         <input type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)"><label for="{{$user->id}}">{{$user->name}}</label>
                 @endforeach
@@ -20,7 +20,7 @@
         </div>
         <div class="row card col-md-6 mt-3 mx-auto p-0">
             <div class="card-body" style="height: 500px; overflow: scroll; background: #4d54be;">
-                <ul id="msg-box" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans; font-size: 20px; text-align: right; direction: rtl">
+                <ul id="msg-box" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans-bold; font-size: 20px; text-align: right; direction: rtl">
                     @foreach($auth_user_messages as $msg)
                         <li>
                             <p style="color: yellowgreen; display: inline-block">{{$msg->user->name}}:</p>

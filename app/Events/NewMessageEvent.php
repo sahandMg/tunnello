@@ -46,7 +46,7 @@ class NewMessageEvent implements ShouldBroadcast
 
     public function broadcastWith () {
         return [
-            'sender_name'       => $this->user->name,
+            'sender_name'     => $this->user->name,
             'sender_id'       => $this->user->id,
             'recipient_id'    => $this->recipient->id,
             'message'         => $this->message->body,
