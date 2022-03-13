@@ -3,7 +3,7 @@
     <div class="container">
         <div class="row col-md-6 m-auto">
             <div>
-                <input id="msg-text-box" type="text" class="form-control" placeholder="Type here ..." required style="direction: rtl; text-align: right">
+                <input id="msg-text-box" type="text" class="form-control"  placeholder="Type here ..." required style="direction: rtl; text-align: right; font-family: IRANSans">
                 <div id="btn-box">
                     <button id="send-btn" class="btn btn-primary mt-3 col-md-4" onclick="send()" disabled>Send</button>
                     <button id="send-btn" class="btn btn-success mt-3 col-md-4" onclick="startFCM()">Allow Notifications</button>
@@ -20,7 +20,7 @@
         </div>
         <div class="row card col-md-6 mt-3 mx-auto p-0">
             <div class="card-body" style="height: 500px; overflow: scroll; background: #4d54be;">
-                <ul id="msg-box" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans-bold; font-size: 20px; text-align: right; direction: rtl">
+                <ul id="msg-box" class="px-1" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans-bold; font-size: 20px; text-align: right; direction: rtl">
                     @foreach($auth_user_messages as $msg)
                         <li>
                             <p style="color: yellowgreen; display: inline-block">{{$msg->user->name}}:</p>

@@ -18,9 +18,6 @@
   src: url('../fonts/iran/woff/IRANSansWeb_Bold.woff');
 }
 
-* {
-  font-family: IRANSans;
-}
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
