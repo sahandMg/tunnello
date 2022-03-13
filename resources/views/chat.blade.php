@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <div class="container">
-        <div class="row col-md-6 m-auto">
+        <div class="row col-md-8 m-auto">
             <div>
                 <input id="msg-text-box" type="text" class="form-control"  placeholder="Type here ..." required style="direction: rtl; text-align: right; font-family: IRANSans">
                 <div id="btn-box">
@@ -11,14 +11,14 @@
 
             </div>
         </div>
-        <div class="row col-md-6 mx-auto">
+        <div class="row col-md-8 mx-auto">
             <ul id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans-bold; font-size: 20px;">
                 @foreach($users as $user)
                         <input type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)"><label for="{{$user->id}}">{{$user->name}}</label>
                 @endforeach
             </ul>
         </div>
-        <div class="row card col-md-6 mt-3 mx-auto p-0">
+        <div class="row card col-md-8 mt-3 mx-auto p-0">
             <div class="card-body" style="height: 500px; overflow: scroll; background: #242853;">
                 <ul id="msg-box" class="px-1" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans-bold; font-size: 20px; text-align: right; direction: rtl">
                     @foreach($auth_user_messages as $msg)
