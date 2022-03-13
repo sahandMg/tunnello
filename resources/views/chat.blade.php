@@ -19,12 +19,12 @@
             </ul>
         </div>
         <div class="row card col-md-6 mt-3 mx-auto p-0">
-            <div class="card-body" style="height: 500px; overflow: scroll; background: #4d54be;">
+            <div class="card-body" style="height: 500px; overflow: scroll; background: #242853;">
                 <ul id="msg-box" class="px-1" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans-bold; font-size: 20px; text-align: right; direction: rtl">
                     @foreach($auth_user_messages as $msg)
                         <li>
-                            <p style="color: yellowgreen; display: inline-block">{{$msg->user->name}}:</p>
-                            {{$msg->body}}
+                            <p style="color: yellowgreen; display: inline-block; padding: 0; margin: 0;">{{$msg->recipient->name}} <- {{$msg->sender->name}}</p>
+                            <p style="padding: 0; margin: 0">{{$msg->body}}</p>
                         </li>
                     @endforeach
                 </ul>
@@ -90,15 +90,19 @@
 
         function updateMessageList() {
             axios.post('/message-list', {from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id')}).then(function (resp) {
-                const node = document.createElement("li");
-                const node2 = document.createElement("p");
-                node2.setAttribute('style', 'color: yellowgreen; display: inline-block');
-                const textnode = document.createTextNode(resp.data.body);
-                const textnode2 = document.createTextNode(resp.data.user.name + ' : ');
-                node.appendChild(textnode);
-                node2.appendChild(textnode2);
-                node.insertBefore(node2, node.firstChild);
-                document.getElementById("msg-box").insertBefore(node, document.getElementById("msg-box").firstChild);
+                const node_li = document.createElement("li");
+                const name_node = document.createElement("p");
+                const body_node = document.createElement("p");
+                name_node.setAttribute('style', 'color: yellowgreen; padding:0; margin:0');
+                body_node.setAttribute('style', 'padding:0; margin:0');
+                const textnode_body = document.createTextNode(resp.data.body);
+                const textnode_name = document.createTextNode(resp.data.recipient.name + ' <- ' + resp.data.sender.name);
+                name_node.appendChild(textnode_name);
+                body_node.appendChild(textnode_body);
+                // node_li.insertBefore(node2, node.firstChild);
+                node_li.appendChild(name_node);
+                node_li.appendChild(body_node);
+                document.getElementById("msg-box").insertBefore(node_li, document.getElementById("msg-box").firstChild);
                 // document.getElementById("msg-box").insertBefore(node2, node)
             })
         }

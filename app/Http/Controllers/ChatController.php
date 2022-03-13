@@ -20,7 +20,8 @@ class ChatController extends Controller
 //            ->orWhere('sender_id', 2)
             ->orderBy('id', 'desc')
             ->take(10)
-            ->with('user')
+            ->with('sender')
+            ->with('recipient')
             ->get();
         $users = User::query()->where('id', '!=', Auth::id())->get();
         $user_channels = User::query()->where('id',  '!=', Auth::id())->get()->pluck('id')->unique()->values()->map(function ($id) {
@@ -37,7 +38,8 @@ class ChatController extends Controller
 //            ->where( 'recipient_id', $request->to)
 //            ->orWhere('sender_id', $request->to)
             ->orderBy('id', 'desc')
-            ->with('user')
+            ->with('sender')
+            ->with('recipient')
             ->first();
     }
 
