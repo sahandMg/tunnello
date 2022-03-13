@@ -34,7 +34,7 @@
     <script>
         let channels = JSON.parse('{!! $user_channels !!}');
         for (let i = 0; i < channels.length; i++) {
-            console.log(channels[i]);
+            // console.log(channels[i]);
             Echo.channel(channels[i])
                 .listen('NewMessageEvent', (e) => {
                     console.log(e);
