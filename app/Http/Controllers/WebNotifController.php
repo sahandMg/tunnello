@@ -14,7 +14,9 @@ class WebNotifController extends Controller
     public function storeToken(Request $request)
     {
         $record = getSpecificAgentRecord();
-        $record->update(['device_key'=>$request->token]);
+        if ($record->device_key == null) {
+            $record->update(['device_key' => $request->token]);
+        }
         return response()->json(['Token successfully stored.']);
     }
 

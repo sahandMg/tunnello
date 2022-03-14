@@ -5,8 +5,9 @@
             <div>
                 <input id="msg-text-box" type="text" class="form-control"  placeholder="Type here ..." required style="direction: rtl; text-align: right; font-family: IRANSans">
                 <div id="btn-box">
-                    <button id="send-btn" class="btn btn-primary mt-3 col-md-4" onclick="send()" disabled>Send</button>
-                    <button id="send-btn" class="btn btn-success mt-3 col-md-4" onclick="startFCM()">Allow Notifications</button>
+                    <button id="send-btn" class="btn btn-primary mt-3 col-md-3" onclick="send()" disabled>Send</button>
+                    <button id="send-btn" class="btn btn-success mt-3 col-md-3" onclick="startFCM()">Allow Notifications</button>
+                    <button id="send-btn" class="btn btn-info mt-3 col-md-3" data-toggle="modal" data-target="#usersModal">Create New Group</button>
                 </div>
 
             </div>
@@ -15,8 +16,14 @@
             <ul class="row" id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans-bold; font-size: 20px;">
                 @foreach($users as $user)
                     <div class="form-check col-4">
-                        <input class="form-check-input" type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)">
+                        <input class="form-check-input" meta="solo" type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)">
                         <label class="form-check-label" for="{{$user->id}}">{{$user->name}}</label>
+                    </div>
+                @endforeach
+                @foreach($user_groups as $group)
+                    <div class="form-check col-4">
+                        <input class="form-check-input" meta="group" atr="{{$group->name}}" type="radio" id="{{$group->id}}" value="{{$group->id}}"  name="username" onclick="selectRecipient(event)">
+                        <label class="form-check-label" for="{{$group->id}}">{{$group->name}}</label>
                     </div>
                 @endforeach
             </ul>
@@ -26,7 +33,11 @@
                 <ul id="msg-box" class="px-1" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans-bold; font-size: 20px; text-align: right; direction: rtl">
                     @foreach($auth_user_messages as $msg)
                         <li>
+                            @if ($msg->group === null)
                             <p style="color: yellowgreen; display: inline-block; padding: 0; margin: 0;">{{$msg->recipient->name}} <- {{$msg->sender->name}}</p>
+                            @else
+                                <p style="color: yellowgreen; display: inline-block; padding: 0; margin: 0;">{{$msg->group->name}} <- {{$msg->sender->name}}</p>
+                            @endif
                             <p style="padding: 0; margin: 0">{{$msg->body}}</p>
                         </li>
                     @endforeach
@@ -34,45 +45,91 @@
             </div>
         </div>
     </div>
+    {{-- Modal --}}
+    <div class="modal fade" id="usersModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">New Group</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="group-name">Group Name</label>
+                    <input type="text" id="group-name" class="form-control" placeholder="Group name" required>
+                    <hr>
+                    <p>Select Members</p>
+                    <div class="col-12 mt-1 row">
+                        @foreach($users as $user)
+                            <div class="form-check col-4">
+                                <input class="form-check-input" type="checkbox" id="group-{{$user->id}}" value="{{$user->id}}"  name="groupMember">
+                                <label class="form-check-label" for="group-{{$user->id}}">{{$user->name}}</label>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="createGroup()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
-        let channels = JSON.parse('{!! $user_channels !!}');
-        for (let i = 0; i < channels.length; i++) {
-            // console.log(channels[i]);
-            Echo.channel(channels[i])
+        let solo_channels = JSON.parse('{!! $user_solo_channels !!}');
+        let group_channels = JSON.parse('{!! $user_group_channels !!}');
+        var type = 'solo';
+        for (let i = 0; i < solo_channels.length; i++) {
+            console.log(solo_channels[i]);
+            Echo.channel(solo_channels[i])
                 .listen('NewMessageEvent', (e) => {
                     console.log(e);
                     document.querySelector('#send-btn').disabled = false;
-                    updateMessageList();
+                    updateMessageList(e.message, e.sender_name, null, e.recipient_name);
                     sendNotif(e.sender_name, e.message, e.recipient_id);
+                });
+        }
+        for (let i = 0; i < group_channels.length; i++) {
+            // console.log(channels[i]);
+            Echo.channel(group_channels[i])
+                .listen('NewGroupMessageEvent', (e) => {
+                    console.log(e);
+                    document.querySelector('#send-btn').disabled = false;
+                    updateMessageList(e.message, e.sender_name, null, e.group_name);
+                    // sendNotif(e.sender_name, e.message, e.recipient_id);
                 });
         }
         function selectRecipient(e) {
             let recipient_id = e.target.id;
-            // leaveChannel(localStorage.getItem('recipient_id'));
+            type = e.target.getAttribute('meta');
             localStorage.setItem('recipient_id', recipient_id);
             document.querySelector('#send-btn').disabled = false;
-            // createChannel(recipient_id);
         }
 
-        {{--function leaveChannel(channelId) {--}}
-            {{--Echo.disconnect();--}}
-        {{--}--}}
+        function selectMember(e) {
+            if (members === undefined) {
+                let members = [];
+            }
+            let member_id = e.target.value;
+            members.push(member_id);
+            localStorage.setItem('members', JSON.stringify(members));
+        }
 
-        {{--function createChannel(recipient_id) {--}}
-            {{--axios.post('channelid',{from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to:recipient_id}).then(function (resp) {--}}
-                {{--channelId = resp.data;--}}
-                {{--Echo.connect();--}}
-                {{--Echo.channel(channelId)--}}
-                    {{--.listen('NewMessageEvent', (e) => {--}}
-                        {{--console.log(e);--}}
-                        {{--document.querySelector('#send-btn').disabled = false;--}}
-                        {{--sendNotif(e.sender_name, e.message);--}}
-                        {{--updateMessageList();--}}
-                    {{--});--}}
-            {{--}).catch(function (err) {--}}
-
-            {{--});--}}
-        {{--}--}}
+        function createGroup() {
+            let name = document.querySelector('#group-name').value;
+            let members = [];
+            // let members = JSON.parse(localStorage.getItem('members'));
+            let nodes = document.querySelectorAll('input[name = "groupMember"]');
+            for (let i = 0; i < nodes.length; i++) {
+                nodes[i].checked === true ? members.push(nodes[i].value) : null;
+            }
+            axios.post("{!! route('group.create') !!}",{name: name, members: members}).then((resp) => {
+                location.reload();
+            }).catch((err) => {
+                console.dir(err.response);
+            })
+        }
 
         function sendNotif(sender_name, message, recp_id) {
             axios.post('/send-web-notification', {title: 'New Message From '+ sender_name, body:message, recipient:recp_id}).catch(function (err) {
@@ -82,32 +139,48 @@
 
         function send() {
             let msg = document.querySelector('#msg-text-box').value;
-            axios.post('/send', {'msg':msg, from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id')}).then(function (resp) {
-                console.log('ajax sent.');
+            if (type === 'solo') {
+                axios.post('/send', {'msg':msg, from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id'), type: type}).then(function (resp) {
+                    console.log('ajax sent.');
                     document.querySelector('#msg-text-box').value = '';
                     document.querySelector('#send-btn').disabled = true;
-            }).catch(function (err) {
-                console.log(err);
-            })
+                }).catch(function (err) {
+                    console.log(err);
+                })
+            } if (type === 'group') {
+                axios.post('/send', {'msg':msg, from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id'), type: type}).then(function (resp) {
+                    console.log('ajax sent.');
+                    document.querySelector('#msg-text-box').value = '';
+                    document.querySelector('#send-btn').disabled = true;
+                }).catch(function (err) {
+                    console.log(err);
+                })
+            }
+
         }
 
-        function updateMessageList() {
-            axios.post('/message-list', {from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id')}).then(function (resp) {
-                const node_li = document.createElement("li");
-                const name_node = document.createElement("p");
-                const body_node = document.createElement("p");
-                name_node.setAttribute('style', 'color: yellowgreen; padding:0; margin:0');
-                body_node.setAttribute('style', 'padding:0; margin:0');
-                const textnode_body = document.createTextNode(resp.data.body);
-                const textnode_name = document.createTextNode(resp.data.recipient.name + ' <- ' + resp.data.sender.name);
-                name_node.appendChild(textnode_name);
-                body_node.appendChild(textnode_body);
-                // node_li.insertBefore(node2, node.firstChild);
-                node_li.appendChild(name_node);
-                node_li.appendChild(body_node);
-                document.getElementById("msg-box").insertBefore(node_li, document.getElementById("msg-box").firstChild);
+        function updateMessageList(message, sender, recipient = null, group_name = null) {
+            {{--axios.post('/message-list', {from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id'),  type: type}).then(function (resp) {--}}
+            // console.log(resp.data)
+            const node_li = document.createElement("li");
+            const name_node = document.createElement("p");
+            const body_node = document.createElement("p");
+            name_node.setAttribute('style', 'color: yellowgreen; padding:0; margin:0');
+            body_node.setAttribute('style', 'padding:0; margin:0');
+            const textnode_body = document.createTextNode(message);
+            if (group_name !== null) {
+                var textnode_name = document.createTextNode(group_name + ' <- ' + sender);
+            }else {
+                var textnode_name = document.createTextNode(recipient + ' <- ' + sender);
+            }
+            name_node.appendChild(textnode_name);
+            body_node.appendChild(textnode_body);
+            // node_li.insertBefore(node2, node.firstChild);
+            node_li.appendChild(name_node);
+            node_li.appendChild(body_node);
+            document.getElementById("msg-box").insertBefore(node_li, document.getElementById("msg-box").firstChild);
                 // document.getElementById("msg-box").insertBefore(node2, node)
-            })
+            // })
         }
     </script>
     <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>

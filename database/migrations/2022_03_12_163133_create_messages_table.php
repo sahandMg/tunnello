@@ -17,8 +17,10 @@ class CreateMessagesTable extends Migration
             $table->id();
             $table->text('body');
             $table->foreignId('sender_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreignId('recipient_id')->references('id')->on('users')->onDelete('cascade');
-//            $table->foreignId('group_id')->references('id')->on('groups');
+            $table->unsignedBigInteger('recipient_id')->nullable();
+            $table->foreign('recipient_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('group_id')->nullable();
+            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
             $table->string('session_id')->nullable();
             $table->timestamps();
         });

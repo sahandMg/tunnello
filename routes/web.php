@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\NewAdminMessageEvent;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\WebNotifController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +30,10 @@ Route::middleware('auth')->group(function() {
     Route::post('store-token', [WebNotifController::class, 'storeToken'])->name('store.token');
 
     Route::post('send-web-notification', [WebNotifController::class, 'sendWebNotification'])->name('send.web-notification');
+
+    Route::prefix('group/')->name('group.')->group(function() {
+        Route::post('create', [GroupController::class, 'create'])->name('create');
+    });
 
 });
 

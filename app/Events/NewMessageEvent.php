@@ -3,11 +3,10 @@
 namespace App\Events;
 
 use App\Models\Message;
+use App\Models\SocketChannel;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -24,6 +23,7 @@ class NewMessageEvent implements ShouldBroadcast
     public $user;
     public $recipient;
     public $message;
+    public $chname = [];
     public $connection = 'redis';
     public $queue = 'broker';
 
@@ -41,12 +41,14 @@ class NewMessageEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+//        $channel = SocketChannel::query()->where('name', channelId($this->user->id, $this->recipient->id))->first();
         return new Channel(channelId($this->user->id, $this->recipient->id));
     }
 
     public function broadcastWith () {
         return [
             'sender_name'     => $this->user->name,
+            'recipient_name'  => $this->recipient->name,
             'sender_id'       => $this->user->id,
             'recipient_id'    => $this->recipient->id,
             'message'         => $this->message->body,

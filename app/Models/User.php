@@ -54,4 +54,19 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class, 'sender_id');
     }
+
+    public function channels()
+    {
+        return $this->hasMany(SocketChannel::class);
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class);
+    }
+
+    public function groupOwner()
+    {
+        return $this->hasOne(Group::class, 'owner_id');
+    }
 }
