@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
 use App\Http\Controllers\Api\Components\Home\GetHomeDataAction;
 use App\Http\Controllers\Api\Components\Message\PostMessagePublishAction;
 use App\Http\Controllers\Chat\ChatMediator;
 use App\Http\Controllers\Controller;
+use App\Repositories\Mids\ChannelCreateMiddleware;
 use App\Repositories\Mids\HomeMiddleware;
 use App\Repositories\Mids\PublishMiddleware;
 use App\Repositories\Mids\NotificationKeyMiddleware;
@@ -26,5 +28,10 @@ class ChatController extends Controller
     public function getChannelId(Request $request)
     {
         return channelId($request->from, $request->to);
+    }
+
+    public function PostChannelCreateAction()
+    {
+        return ChatMediator::middlewared(ChannelCreateMiddleware::class)->proxy(PostChannelCreateAction::class, \request()->all());
     }
 }

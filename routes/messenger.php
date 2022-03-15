@@ -19,4 +19,9 @@ Route::middleware('auth')->group(function() {
 
         Route::post('create', [GroupController::class, 'PostGroupCreateAction'])->name('create');
     });
+
+    Route::prefix('channel/')->name('channel.')->group(function() {
+
+        Route::post('create', [ChatController::class, 'PostChannelCreateAction'])->name('create');
+    });
 });

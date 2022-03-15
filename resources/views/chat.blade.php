@@ -104,6 +104,11 @@
             type = e.target.getAttribute('meta');
             localStorage.setItem('recipient_id', recipient_id);
             document.querySelector('#send-btn').disabled = false;
+            createChannelRecord(recipient_id);
+        }
+
+        function createChannelRecord(recipient_id) {
+            axios.post("{!! route('channel.create') !!}", {recipient_id:recipient_id}).then((resp) => {}).catch((err)=>{})
         }
 
         function selectMember(e) {

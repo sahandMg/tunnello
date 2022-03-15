@@ -17,9 +17,6 @@ class PostMessagePublishAction extends AbstractComponent
     {
         if ($arguments['type'] == 'solo') {
             $msg = MessageDB::createNewMessage($arguments['msg'], $arguments['to'], $arguments['from']);
-            $channel_name = channelId($arguments['from'], $arguments['to']);
-            ChannelDB::createNewChannel($arguments['from'], $channel_name);
-            ChannelDB::createNewChannel($arguments['to'], $channel_name);
             NewMessageEvent::dispatch(auth()->user(), UserDB::getUserById($arguments['to']), $msg);
         }
         elseif ($arguments['type'] == 'group') {
