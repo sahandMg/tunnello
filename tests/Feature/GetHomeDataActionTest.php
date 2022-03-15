@@ -32,9 +32,9 @@ class GetHomeDataActionTest extends TestCase
         $mid = User::find(3);
         $this->actingAs($sender);
         PostGroupCreateAction::execute(['name' => 'teddy', 'members' => [$rep->id, $mid->id]]);
-        PostChannelCreateAction::execute(['recipient_id' => $rep->id]);
+        PostChannelCreateAction::execute(['recipient_id' => $rep->id, 'type' => 'solo']);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $rep->id, 'from' => $sender->id, 'msg' => 'Hey1 man']);
-        PostChannelCreateAction::execute(['recipient_id' => $mid->id]);
+        PostChannelCreateAction::execute(['recipient_id' => $mid->id, 'type' => 'solo']);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $mid->id, 'from' => $sender->id, 'msg' => 'Hey2 man']);
         PostMessagePublishAction::execute(['type' => 'group', 'to' => Group::first()->id, 'from' => $sender->id, 'msg' => 'Hey3 man']);
         $val = GetHomeDataAction::execute();

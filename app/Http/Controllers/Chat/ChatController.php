@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Chat;
 
+use App\Http\Controllers\Api\Components\Channel\GetChannelListAction;
 use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
 use App\Http\Controllers\Api\Components\Home\GetHomeDataAction;
 use App\Http\Controllers\Api\Components\Message\PostMessagePublishAction;
@@ -33,5 +34,10 @@ class ChatController extends Controller
     public function PostChannelCreateAction()
     {
         return ChatMediator::middlewared(ChannelCreateMiddleware::class)->proxy(PostChannelCreateAction::class, \request()->all());
+    }
+
+    public function GetChannelListAction()
+    {
+        return ChatMediator::proxy(GetChannelListAction::class, \request()->all());
     }
 }

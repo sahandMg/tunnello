@@ -9,7 +9,9 @@ class PostChannelCreateAction extends AbstractComponent
 {
     public static function execute($arguments = null)
     {
-        ChannelDB::createNewChannel(auth()->id(), channelId(auth()->id(), $arguments['recipient_id']));
-        ChannelDB::createNewChannel($arguments['recipient_id'], channelId(auth()->id(), $arguments['recipient_id']));
+        if ($arguments['type'] == 'solo') {
+            ChannelDB::createNewChannel(auth()->id(), channelId(auth()->id(), $arguments['recipient_id']));
+            ChannelDB::createNewChannel($arguments['recipient_id'], channelId(auth()->id(), $arguments['recipient_id']));
+        }
     }
 }

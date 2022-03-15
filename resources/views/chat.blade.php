@@ -77,38 +77,62 @@
         </div>
     </div>
     <script>
-        let solo_channels = JSON.parse('{!! $user_solo_channels !!}');
-        let group_channels = JSON.parse('{!! $user_group_channels !!}');
+        var solo_channels = JSON.parse('{!! $user_solo_channels !!}');
+        var group_channels = JSON.parse('{!! $user_group_channels !!}');
         var type = 'solo';
-        for (let i = 0; i < solo_channels.length; i++) {
-            Echo.channel(solo_channels[i])
-                .listen('NewMessageEvent', (e) => {
-                    console.log(e);
-                    document.querySelector('#send-btn').disabled = false;
-                    updateMessageList(e.message, e.sender_name, null, e.recipient_name);
-                    sendNotif(e.sender_name, e.message, e.recipient_id);
-                });
+        init_listeners();
+        setInterval(updateChannels,60000);
+        function init_listeners() {
+            for (let i = 0; i < solo_channels.length; i++) {
+                Echo.channel(solo_channels[i])
+                    .listen('NewMessageEvent', (e) => {
+                        console.log(e);
+                        document.querySelector('#send-btn').disabled = false;
+                        updateMessageList(e.message, e.sender_name, null, e.recipient_name);
+                        sendNotif(e.sender_name, e.message, e.recipient_id);
+                    });
+            }
+            for (let i = 0; i < group_channels.length; i++) {
+                // console.log(channels[i]);
+                Echo.channel(group_channels[i])
+                    .listen('NewGroupMessageEvent', (e) => {
+                        console.log(e);
+                        document.querySelector('#send-btn').disabled = false;
+                        updateMessageList(e.message, e.sender_name, null, e.group_name);
+                        // sendNotif(e.sender_name, e.message, e.recipient_id);
+                    });
+            }
         }
-        for (let i = 0; i < group_channels.length; i++) {
-            // console.log(channels[i]);
-            Echo.channel(group_channels[i])
-                .listen('NewGroupMessageEvent', (e) => {
-                    console.log(e);
-                    document.querySelector('#send-btn').disabled = false;
-                    updateMessageList(e.message, e.sender_name, null, e.group_name);
-                    // sendNotif(e.sender_name, e.message, e.recipient_id);
-                });
-        }
+
         function selectRecipient(e) {
             let recipient_id = e.target.id;
             type = e.target.getAttribute('meta');
             localStorage.setItem('recipient_id', recipient_id);
             document.querySelector('#send-btn').disabled = false;
-            createChannelRecord(recipient_id);
+            createChannelRecord(recipient_id, type);
         }
 
-        function createChannelRecord(recipient_id) {
-            axios.post("{!! route('channel.create') !!}", {recipient_id:recipient_id}).then((resp) => {}).catch((err)=>{})
+        function createChannelRecord(recipient_id, type) {
+            axios.post("{!! route('channel.create') !!}", {recipient_id:recipient_id, type: type}).then((resp) => {
+                solo_channels = resp.data.solo;
+                group_channels = resp.data.group;
+                reset_channels();
+                init_listeners();
+            }).catch((err)=>{})
+        }
+
+        function reset_channels() {
+            Echo.disconnect();
+            Echo.connect();
+        }
+
+        function updateChannels() {
+            axios.get("{!! route('channel.read') !!}").then((resp) => {
+                solo_channels = resp.data.solo;
+                group_channels = resp.data.group;
+                reset_channels();
+                init_listeners();
+            }).catch((err)=>{})
         }
 
         function selectMember(e) {

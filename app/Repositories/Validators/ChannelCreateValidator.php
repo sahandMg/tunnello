@@ -19,6 +19,7 @@ class ChannelCreateValidator
     {
         $v = Validator::make(request()->all(), [
             'recipient_id' => 'required',
+            'type' => 'required',
         ]);
         if ($v->fails()) {
             return response()->json($v->getMessageBag(), Response::HTTP_BAD_REQUEST)->throwResponse();

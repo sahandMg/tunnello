@@ -23,5 +23,6 @@ Route::middleware('auth')->group(function() {
     Route::prefix('channel/')->name('channel.')->group(function() {
 
         Route::post('create', [ChatController::class, 'PostChannelCreateAction'])->name('create');
+        Route::get('read', [ChatController::class, 'GetChannelListAction'])->name('read');
     });
 });

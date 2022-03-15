@@ -36,9 +36,9 @@ class PostMessagePublishActionTest extends TestCase
         $m = [$middleMan->id, $recipient->id];
         $data = ['name' => 'test group33', 'members' => $m];
         PostGroupCreateAction::execute($data);
-        PostChannelCreateAction::execute(['recipient_id' => $recipient->id]);
+        PostChannelCreateAction::execute(['recipient_id' => $recipient->id, 'type' => 'solo']);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $recipient->id, 'from' => $sender->id, 'msg' => 'Hey1 man']);
-        PostChannelCreateAction::execute(['recipient_id' => $middleMan->id]);
+        PostChannelCreateAction::execute(['recipient_id' => $middleMan->id, 'type' => 'solo']);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $middleMan->id, 'from' => $sender->id, 'msg' => 'Hey2 man']);
         PostMessagePublishAction::execute(['type' => 'group', 'to' => Group::first()->id, 'from' => $sender->id, 'msg' => 'Hey3 man']);
         $channels = SocketChannel::get();

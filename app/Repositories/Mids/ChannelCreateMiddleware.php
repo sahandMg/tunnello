@@ -10,6 +10,7 @@ namespace App\Repositories\Mids;
 
 
 use App\Http\Requests\PublishMessageDataRequest;
+use App\Repositories\DB\ChannelDB;
 use App\Repositories\Validators\ChannelCreateValidator;
 use App\Repositories\Validators\PublishValidator;
 use Illuminate\Http\Response;
@@ -21,7 +22,9 @@ class ChannelCreateMiddleware
     {
         ChannelCreateValidator::install();
         $value = $next($data);
-        return response()->json('Ok', Response::HTTP_OK);
+        $user_solo_channels =  ChannelDB::getAuthUserSoloChannels();
+        $user_group_channels = ChannelDB::getAuthUserGroupChannels();
+        return response()->json(['solo' => $user_solo_channels, 'group' => $user_group_channels], Response::HTTP_OK);
 
     }
 }

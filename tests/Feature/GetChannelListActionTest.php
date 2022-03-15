@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Api\Components\Channel\GetChannelListAction;
 use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
 use App\Models\SocketChannel;
 use App\Models\User;
@@ -10,7 +11,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
-class PostChannelCreateActionTest extends TestCase
+class GetChannelListActionTest extends TestCase
 {
     public function setUp(): void
     {
@@ -22,7 +23,7 @@ class PostChannelCreateActionTest extends TestCase
      *
      * @return void
      */
-    public function test_channel_creation()
+    public function test_channel_list()
     {
         User::factory(3)->create();
         $sender = User::find(1);
@@ -30,8 +31,13 @@ class PostChannelCreateActionTest extends TestCase
         $middleMan = User::find(3);
         $this->actingAs($sender);
         PostChannelCreateAction::execute(['recipient_id' => $recipient->id, 'type' => 'solo']);
+        PostChannelCreateAction::execute(['recipient_id' => $middleMan->id, 'type' => 'solo']);
+        PostChannelCreateAction::execute(['recipient_id' => $middleMan->id, 'type' => 'group']);
+        $resp = GetChannelListAction::execute();
         $c = SocketChannel::query()->get();
-        $this->assertEquals(2, $c->count());
+        $this->assertEquals(4, $c->count());
+        $this->assertEquals(2, count(json_decode($resp->getContent(), true)['solo']));
+
         $this->assertEquals(channelId(auth()->id(), $recipient->id) , $c->first()->name);
     }
 }
