@@ -56,11 +56,13 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link" href="" data-toggle="modal" data-target="#addFriendsModal">Add Friends</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
                                 </a>
-
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
@@ -82,6 +84,37 @@
         <main class="py-4">
             @yield('content')
         </main>
+        {{-- Modal --}}
+        <div class="modal fade" id="addFriendsModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">New Group</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="friend-email">Friend Email</label>
+                        <input type="text" id="friend-email" class="form-control" placeholder="Friend Email" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addFriend()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            function addFriend() {
+                let email = document.querySelector("#friend-email").value;
+                axios.post("{!! route('friend.add') !!}", {email:email}).then((resp) => {
+                    location.reload()
+                }).catch((err) => {
+                    alert(err.response.data);
+                })
+            }
+        </script>
     </div>
 </body>
 </html>

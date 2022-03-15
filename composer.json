@@ -11,6 +11,7 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "imanghafoori/laravel-middlewarize": "^1.1",
+        "imanghafoori/laravel-nullable": "^1.2",
         "jenssegers/agent": "^2.6",
         "jenssegers/mongodb": "3.8.4",
         "laravel-notification-channels/webpush": "^5.1",

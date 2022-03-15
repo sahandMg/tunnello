@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Chat\ChatController;
+use App\Http\Controllers\Friend\FriendController;
 use App\Http\Controllers\GroupController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +23,9 @@ Route::middleware('auth')->group(function() {
 
         Route::post('create', [ChatController::class, 'PostChannelCreateAction'])->name('create');
         Route::get('read', [ChatController::class, 'GetChannelListAction'])->name('read');
+    });
+
+    Route::prefix('friend/')->name('friend.')->group(function() {
+        Route::post('add', [FriendController::class, 'PostFriendAddAction'])->name('add');
     });
 });

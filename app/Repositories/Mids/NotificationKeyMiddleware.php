@@ -18,6 +18,9 @@ class NotificationKeyMiddleware
     {
         NotificationKeyStoreValidator::install();
         $value = $next($data);
+        if ($value instanceof \Exception) {
+            return $value;
+        }
         return response()->json(['Token successfully stored.']);
     }
 }

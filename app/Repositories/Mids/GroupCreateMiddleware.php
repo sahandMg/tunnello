@@ -19,6 +19,9 @@ class GroupCreateMiddleware
     {
         GroupCreateValidator::install();
         $value = $next($data);
+        if ($value instanceof \Exception) {
+            return $value;
+        }
         return response()->json('Ok', Response::HTTP_OK);
     }
 }

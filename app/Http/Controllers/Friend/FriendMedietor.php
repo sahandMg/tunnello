@@ -2,18 +2,17 @@
 /**
  * Created by PhpStorm.
  * User: Sahand
- * Date: 3/14/22
- * Time: 10:27 PM
+ * Date: 3/15/22
+ * Time: 11:17 AM
  */
 
-namespace App\Http\Controllers\Chat;
+namespace App\Http\Controllers\Friend;
 
 
-use App\Exceptions\PublishMessageBadRequestException;
 use App\Exceptions\UserNotFoundException;
 use Imanghafoori\Middlewarize\Middlewarable;
 
-class ChatMediator
+class FriendMedietor
 {
     use Middlewarable;
 
@@ -21,8 +20,6 @@ class ChatMediator
     {
         try{
             return $class_name::execute($args);
-        }catch (\Exception $exception) {
-            dd($exception->getMessage(), $exception->getFile(), $exception->getLine());
         }catch (UserNotFoundException $exception) {
             return $exception->render();
         }

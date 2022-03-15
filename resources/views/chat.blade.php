@@ -14,7 +14,7 @@
         </div>
         <div class="row col-12 col-md-8 mx-auto mt-1">
             <ul class="row" id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans-bold; font-size: 20px;">
-                @foreach($users as $user)
+                @foreach($friends as $user)
                     <div class="form-check col-6 col-md-4">
                         <input class="form-check-input" meta="solo" type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)">
                         <label class="form-check-label" for="{{$user->id}}">{{$user->name}}</label>
@@ -61,7 +61,7 @@
                     <hr>
                     <p>Select Members</p>
                     <div class="col-12 mt-1 row">
-                        @foreach($users as $user)
+                        @foreach($friends as $user)
                             <div class="form-check col-4">
                                 <input class="form-check-input" type="checkbox" id="group-{{$user->id}}" value="{{$user->id}}"  name="groupMember">
                                 <label class="form-check-label" for="group-{{$user->id}}">{{$user->name}}</label>

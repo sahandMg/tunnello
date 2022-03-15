@@ -8,14 +8,15 @@
 
 namespace App\Repositories\Mids;
 
+use App\Repositories\Validators\FriendAddValidator;
 use App\Repositories\Validators\PublishValidator;
 use Illuminate\Http\Response;
 
-class PublishMiddleware
+class FriendAddMiddleware
 {
     public function handle($data, $next)
     {
-        PublishValidator::install();
+        FriendAddValidator::install();
         $value = $next($data);
         if ($value instanceof \Exception) {
             return $value;

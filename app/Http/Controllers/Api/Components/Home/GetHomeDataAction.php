@@ -18,10 +18,10 @@ class GetHomeDataAction extends AbstractComponent
             $auth_user_messages = $auth_user_messages->concat($grouped->sortByDesc('id')->values()->take(5));
         }
         $auth_user_messages = $auth_user_messages->unique()->sortByDesc('created_at');
-        $users = UserDB::getAllUsersExceptAuthOne();
+        $friends = UserDB::getAuthUserFriends();
         $user_solo_channels =  ChannelDB::getAuthUserSoloChannels();
         $user_group_channels = ChannelDB::getAuthUserGroupChannels();
         $user_groups = UserDB::getAuthUserGroups();
-        return compact('auth_user_messages', 'users', 'user_solo_channels', 'user_groups', 'user_group_channels');
+        return compact('auth_user_messages', 'friends', 'user_solo_channels', 'user_groups', 'user_group_channels');
     }
 }

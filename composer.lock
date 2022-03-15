@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e8b507f873a8b2e78d8bb0121b15c33",
+    "content-hash": "afc4c0e1776296078db05b07f3d7a6fb",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1597,6 +1597,69 @@
                 "source": "https://github.com/imanghafoori1/laravel-middlewarize/tree/v1.1.9"
             },
             "time": "2022-02-09T21:08:50+00:00"
+        },
+        {
+            "name": "imanghafoori/laravel-nullable",
+            "version": "v1.2.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/imanghafoori1/laravel-nullable.git",
+                "reference": "1a4437ec24db4b85c0c060287528fb012e3f1c7d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/imanghafoori1/laravel-nullable/zipball/1a4437ec24db4b85c0c060287528fb012e3f1c7d",
+                "reference": "1a4437ec24db4b85c0c060287528fb012e3f1c7d",
+                "shasum": ""
+            },
+            "require": {
+                "laravel/framework": "~5.1|6.*|7.*|8.*|9.*",
+                "php": "^7.1.3|7.2.*|7.3.*|7.4.*|8.0.*|8.1.*"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.0",
+                "orchestra/testbench": "~4.0"
+            },
+            "suggest": {
+                "imanghafoori/eloquent-relativity": "Decouple your eloquent models from each other.",
+                "imanghafoori/laravel-anypass": " Allows you login with any password in local environment.",
+                "imanghafoori/laravel-decorator": "Allows you to easily apply the decorator pattern in a laravel app.",
+                "imanghafoori/laravel-masterpass": "You can easily set a master password without code change.",
+                "imanghafoori/laravel-terminator": "Gives you opportunity to refactor your controllers.",
+                "imanghafoori/laravel-widgetize": "Gives you a better structure and caching opportunity for your web pages."
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
+                "psr-4": {
+                    "Imanghafoori\\Helpers\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Iman Ghafoori",
+                    "email": "imanghafoori1@gmail.com"
+                }
+            ],
+            "description": "A package to help you write expressive defensive code in a functional manner",
+            "homepage": "https://github.com/imanghafoori1/laravel-nullable",
+            "keywords": [
+                "laravel",
+                "laravel5",
+                "laravel5-package",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/imanghafoori1/laravel-nullable/issues",
+                "source": "https://github.com/imanghafoori1/laravel-nullable/tree/v1.2.7"
+            },
+            "time": "2022-03-09T20:34:49+00:00"
         },
         {
             "name": "jaybizzle/crawler-detect",

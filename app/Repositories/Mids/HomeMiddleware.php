@@ -17,6 +17,9 @@ class HomeMiddleware
     {
         AgentDB::createNewAgentRecord();
         $value = $next($data);
+        if ($value instanceof \Exception) {
+            return $value;
+        }
         return view('chat', $value);
     }
 }
