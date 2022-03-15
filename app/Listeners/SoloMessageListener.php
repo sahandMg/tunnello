@@ -36,6 +36,7 @@ class SoloMessageListener
                 "notification" => [
                     "title" => 'New Message From ' . $event->user->name,
                     "body" => $event->message->body,
+                    "icon" => public_path('images/tunnello.png')
                 ]
             ];
             $encodedData = json_encode($data);

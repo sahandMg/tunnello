@@ -45,7 +45,6 @@ class SendHttpReqJob implements ShouldQueue
         if ($result === FALSE) {
             die('Curl failed: ' . curl_error($ch));
         }
-        // Close connection
         curl_close($ch);
     }
 }

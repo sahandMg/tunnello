@@ -11,6 +11,7 @@ namespace App\Repositories\Mids;
 
 use App\Events\NewChannelEvent;
 use App\Repositories\DB\ChannelDB;
+use App\Repositories\Nulls\NullChannel;
 use App\Repositories\Validators\ChannelCreateValidator;
 use App\Repositories\Validators\PublishValidator;
 use Illuminate\Http\Response;
@@ -21,6 +22,9 @@ class ChannelCreateMiddleware
     public function handle($data, $next)
     {
         ChannelCreateValidator::install();
+        /**
+         * @var $channel NullChannel
+         */
         $channel = $next($data);
         $user_solo_channels =  ChannelDB::getAuthUserSoloChannels();
         $user_group_channels = ChannelDB::getAuthUserGroupChannels();

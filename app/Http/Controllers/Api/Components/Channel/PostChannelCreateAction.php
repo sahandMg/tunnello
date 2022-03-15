@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Components\Channel;
 
 use App\Http\Controllers\Api\Components\AbstractComponent;
 use App\Repositories\DB\ChannelDB;
+use App\Repositories\Nulls\NullChannel;
 
 class PostChannelCreateAction extends AbstractComponent
 {
@@ -12,7 +13,7 @@ class PostChannelCreateAction extends AbstractComponent
         if ($arguments['type'] == 'solo') {
             $channel = ChannelDB::createNewChannel(auth()->id(), channelId(auth()->id(), $arguments['recipient_id']));
             ChannelDB::createNewChannel($arguments['recipient_id'], channelId(auth()->id(), $arguments['recipient_id']));
-            return $channel;
         }
+        return isset($channel) ? $channel : new NullChannel();
     }
 }

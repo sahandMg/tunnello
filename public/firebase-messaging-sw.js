@@ -23,7 +23,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
     const title = "Hello world is awesome";
     const options = {
         body: "Your notificaiton message .",
-        icon: "/firebase-logo.png",
+        icon: "./images/tunnello.png",
     };
     return self.registration.showNotification(
         title,

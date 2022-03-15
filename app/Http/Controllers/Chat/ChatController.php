@@ -12,6 +12,7 @@ use App\Repositories\Mids\ChannelCreateMiddleware;
 use App\Repositories\Mids\HomeMiddleware;
 use App\Repositories\Mids\PublishMiddleware;
 use App\Repositories\Mids\NotificationKeyMiddleware;
+use App\Repositories\Nulls\NullChannel;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
