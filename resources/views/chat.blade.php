@@ -81,7 +81,7 @@
         var group_channels = JSON.parse('{!! $user_group_channels !!}');
         var type = 'solo';
         init_listeners();
-        setInterval(updateChannels,60000);
+        setInterval(updateChannels,20000);
         function init_listeners() {
             for (let i = 0; i < solo_channels.length; i++) {
                 Echo.channel(solo_channels[i])
