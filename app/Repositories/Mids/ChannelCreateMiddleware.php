@@ -9,7 +9,7 @@
 namespace App\Repositories\Mids;
 
 
-use App\Http\Requests\PublishMessageDataRequest;
+use App\Events\NewChannelEvent;
 use App\Repositories\DB\ChannelDB;
 use App\Repositories\Validators\ChannelCreateValidator;
 use App\Repositories\Validators\PublishValidator;
@@ -21,9 +21,12 @@ class ChannelCreateMiddleware
     public function handle($data, $next)
     {
         ChannelCreateValidator::install();
-        $value = $next($data);
+        $channel = $next($data);
         $user_solo_channels =  ChannelDB::getAuthUserSoloChannels();
         $user_group_channels = ChannelDB::getAuthUserGroupChannels();
+        if ($channel->wasRecentlyCreated) {
+            NewChannelEvent::dispatch($channel, auth()->user(), request()->get('recipient_id'));
+        }
         return response()->json(['solo' => $user_solo_channels, 'group' => $user_group_channels], Response::HTTP_OK);
 
     }

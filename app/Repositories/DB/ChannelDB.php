@@ -9,6 +9,7 @@
 namespace App\Repositories\DB;
 
 
+use App\Events\NewChannelEvent;
 use App\Models\SocketChannel;
 
 class ChannelDB
@@ -25,7 +26,7 @@ class ChannelDB
 
     public static function createNewChannel($channel_owner_id, $channel_name, $type = 'solo')
     {
-        return SocketChannel::query()
+        $channel = SocketChannel::query()
                 ->where('user_id', $channel_owner_id)
                 ->where('name', $channel_name)
                 ->firstOrCreate([
@@ -33,5 +34,6 @@ class ChannelDB
                     'user_id' => $channel_owner_id,
                     'type' => $type
                 ]);
+        return $channel;
     }
 }

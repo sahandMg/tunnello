@@ -81,7 +81,7 @@
         var group_channels = JSON.parse('{!! $user_group_channels !!}');
         var type = 'solo';
         init_listeners();
-        setInterval(updateChannels,20000);
+        // setInterval(updateChannels,20000);
         function init_listeners() {
             for (let i = 0; i < solo_channels.length; i++) {
                 Echo.channel(solo_channels[i])
@@ -102,6 +102,12 @@
                         // sendNotif(e.sender_name, e.message, e.recipient_id);
                     });
             }
+
+            Echo.channel('channels.' + {!! auth()->id() !!})
+                .listen('NewChannelEvent', (e) => {
+                    console.log(e);
+                    updateChannels();
+                });
         }
 
         function selectRecipient(e) {
