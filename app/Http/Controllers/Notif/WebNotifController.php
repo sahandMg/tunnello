@@ -21,7 +21,7 @@ class WebNotifController extends Controller
 
     public function PostNotificationSendAction(Request $request)
     {
-        return WebNotifMedietor::middlewared(NotificationSendMiddleware::class)
-            ->proxy(PostNotificationSendAction::class, $request->all());
+//        return WebNotifMedietor::middlewared(NotificationSendMiddleware::class)
+//            ->proxy(PostNotificationSendAction::class, $request->all());
     }
 }

@@ -34,7 +34,7 @@ class SoloMessageListener
             $data = [
                 "registration_ids" => $FcmToken,
                 "notification" => [
-                    "title" => 'New Message From ' . $event->recipient->name,
+                    "title" => 'New Message From ' . $event->user->name,
                     "body" => $event->message->body,
                 ]
             ];
