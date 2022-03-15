@@ -11,8 +11,6 @@ Route::middleware('auth')->group(function() {
 
     Route::post('channelid', [ChatController::class, 'getChannelId']);
 
-    Route::post('message-list', [ChatController::class, 'messageList']);
-
     Route::get('chat', [ChatController::class, 'GetHomeDataAction']);
 
     Route::prefix('group/')->name('group.')->group(function() {
