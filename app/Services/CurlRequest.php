@@ -2,38 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: Sahand
- * Date: 3/13/22
- * Time: 12:39 PM
+ * Date: 3/15/22
+ * Time: 11:32 AM
  */
 
 namespace App\Services;
 
 
-class PushNotification
+class CurlRequest
 {
-    public function sendNotification($title, $body)
+    public static function send($url, array $headers = [], $encodedData)
     {
-        $url = 'https://fcm.googleapis.com/fcm/send';
-        $FcmToken = User::whereNotNull('device_key')->pluck('device_key')->all();
-
-        $serverKey = env('FIRE_BASE_SERVER_KEY');
-
-        $data = [
-            "registration_ids" => $FcmToken,
-            "notification" => [
-                "title" => $title,
-                "body" => $body,
-            ]
-        ];
-        $encodedData = json_encode($data);
-
-        $headers = [
-            'Authorization:key=' . $serverKey,
-            'Content-Type: application/json',
-        ];
-
         $ch = curl_init();
-
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -50,7 +30,6 @@ class PushNotification
         }
         // Close connection
         curl_close($ch);
-        // FCM response
-        dd($result);
+        return $result;
     }
 }

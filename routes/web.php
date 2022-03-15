@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function() {
     Route::post('send-web-notification', [WebNotifController::class, 'sendWebNotification'])->name('send.web-notification');
 
     Route::prefix('group/')->name('group.')->group(function() {
+
         Route::post('create', [GroupController::class, 'create'])->name('create');
     });
 

@@ -1,0 +1,13 @@
+<?php
+
+namespace DummyDir;
+
+use App\Http\Controllers\Api\Components\AbstractComponent;
+
+class DummyClass extends AbstractComponent
+{
+    public static function execute($arguments = null)
+    {
+
+    }
+}

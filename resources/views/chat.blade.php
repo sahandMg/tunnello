@@ -33,8 +33,8 @@
                 <ul id="msg-box" class="px-1" style="list-style: none; color: white; font-weight: bold; font-family: IRANSans-bold; font-size: 20px; text-align: right; direction: rtl">
                     @foreach($auth_user_messages as $msg)
                         <li>
-                            @if ($msg->group === null)
-                            <p style="color: yellowgreen; display: inline-block; padding: 0; margin: 0;">{{$msg->recipient->name}} <- {{$msg->sender->name}}</p>
+                            @if (!$msg->group)
+                                <p style="color: yellowgreen; display: inline-block; padding: 0; margin: 0;">{{$msg->recipient->name}} <- {{$msg->sender->name}}</p>
                             @else
                                 <p style="color: yellowgreen; display: inline-block; padding: 0; margin: 0;">{{$msg->group->name}} <- {{$msg->sender->name}}</p>
                             @endif
@@ -81,7 +81,6 @@
         let group_channels = JSON.parse('{!! $user_group_channels !!}');
         var type = 'solo';
         for (let i = 0; i < solo_channels.length; i++) {
-            console.log(solo_channels[i]);
             Echo.channel(solo_channels[i])
                 .listen('NewMessageEvent', (e) => {
                     console.log(e);
@@ -140,7 +139,7 @@
         function send() {
             let msg = document.querySelector('#msg-text-box').value;
             if (type === 'solo') {
-                axios.post('/send', {'msg':msg, from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id'), type: type}).then(function (resp) {
+                axios.post('{!! route("publish") !!}', {'msg':msg, from: "{!!auth()->id()!!}", to: localStorage.getItem('recipient_id'), type: type}).then(function (resp) {
                     console.log('ajax sent.');
                     document.querySelector('#msg-text-box').value = '';
                     document.querySelector('#send-btn').disabled = true;
@@ -148,7 +147,7 @@
                     console.log(err);
                 })
             } if (type === 'group') {
-                axios.post('/send', {'msg':msg, from: "{!! \Illuminate\Support\Facades\Auth::id() !!}", to: localStorage.getItem('recipient_id'), type: type}).then(function (resp) {
+                axios.post('{!! route("publish") !!}', {'msg':msg, from: "{!! auth()->id() !!}", to: localStorage.getItem('recipient_id'), type: type}).then(function (resp) {
                     console.log('ajax sent.');
                     document.querySelector('#msg-text-box').value = '';
                     document.querySelector('#send-btn').disabled = true;
