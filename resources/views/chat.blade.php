@@ -6,8 +6,8 @@
                 <input id="msg-text-box" type="text" class="form-control"  placeholder="Type here ..." required style="direction: rtl; text-align: right; font-family: IRANSans">
                 <div id="btn-box">
                     <button id="send-btn" class="btn btn-primary mt-3 col-md-3" onclick="send()" disabled>Send</button>
-                    <button id="send-btn" class="btn btn-success mt-3 col-md-3" onclick="startFCM()">Allow Notifications</button>
-                    <button id="send-btn" class="btn btn-info mt-3 col-md-3" data-toggle="modal" data-target="#usersModal">Create New Group</button>
+                    <button id="allow-btn" class="btn btn-success mt-3 col-md-3" onclick="startFCM()">Allow Notifications</button>
+                    <button id="group-btn" class="btn btn-info mt-3 col-md-3" data-toggle="modal" data-target="#usersModal">Create New Group</button>
                 </div>
 
             </div>
@@ -81,7 +81,18 @@
         var group_channels = JSON.parse('{!! $user_group_channels !!}');
         var type = 'solo';
         init_listeners();
-        // setInterval(updateChannels,20000);
+        setListenerForEnter();
+
+        function setListenerForEnter() {
+            var input = document.querySelector("#msg-text-box");
+            input.addEventListener("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    document.querySelector("#send-btn").click();
+                }
+            });
+        }
+
         function init_listeners() {
             for (let i = 0; i < solo_channels.length; i++) {
                 Echo.channel(solo_channels[i])
