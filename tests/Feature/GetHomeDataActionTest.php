@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
+use App\Http\Controllers\Api\Components\Friend\PostFriendAddAction;
 use App\Http\Controllers\Api\Components\Group\PostGroupCreateAction;
 use App\Http\Controllers\Api\Components\Home\GetHomeDataAction;
 use App\Http\Controllers\Api\Components\Message\PostMessagePublishAction;
@@ -37,10 +38,12 @@ class GetHomeDataActionTest extends TestCase
         PostChannelCreateAction::execute(['recipient_id' => $mid->id, 'type' => 'solo']);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $mid->id, 'from' => $sender->id, 'msg' => 'Hey2 man']);
         PostMessagePublishAction::execute(['type' => 'group', 'to' => Group::first()->id, 'from' => $sender->id, 'msg' => 'Hey3 man']);
+        PostFriendAddAction::execute(['email' => $rep->email]);
+        PostFriendAddAction::execute(['email' => $mid->email]);
         $val = GetHomeDataAction::execute();
 //        'auth_user_messages', 'users', 'user_solo_channels', 'user_groups', 'user_group_channels'
         $this->assertEquals(3, $val['auth_user_messages']->count());
-        $this->assertEquals(2, $val['users']->count());
+        $this->assertEquals(2, $val['friends']->count());
         $this->assertEquals(2, $val['user_solo_channels']->count());
         $this->assertEquals(1, $val['user_groups']->count());
         $this->assertEquals(1, $val['user_group_channels']->count());
