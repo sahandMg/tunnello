@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\NewGroupMessageEvent;
+use App\Events\NewMessageEvent;
+use App\Listeners\GroupMessageListener;
+use App\Listeners\SoloMessageListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -18,6 +22,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        NewMessageEvent::class => [ SoloMessageListener::class ],
+        NewGroupMessageEvent::class => [ GroupMessageListener::class ],
     ];
 
     /**

@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\Mids\NotificationKeyMiddleware;
 use App\Repositories\Mids\NotificationSendMiddleware;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class WebNotifController extends Controller
 {

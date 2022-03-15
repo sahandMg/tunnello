@@ -100,7 +100,7 @@
                         console.log(e);
                         document.querySelector('#send-btn').disabled = false;
                         updateMessageList(e.message, e.sender_name, null, e.recipient_name);
-                        sendNotif(e.sender_name, e.message, e.recipient_id);
+                        // sendNotif(e.sender_name, e.message, e.recipient_id);
                     });
             }
             for (let i = 0; i < group_channels.length; i++) {
@@ -177,7 +177,7 @@
         }
 
         function sendNotif(sender_name, message, recp_id) {
-            axios.post('/send-web-notification', {title: 'New Message From '+ sender_name, body:message, recipient:recp_id}).catch(function (err) {
+            axios.post('{!! route("send.web-notification") !!}', {title: 'New Message From '+ sender_name, body:message, recipient:recp_id}).catch(function (err) {
                 console.dir(err.response);
             })
         }

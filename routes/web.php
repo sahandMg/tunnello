@@ -1,8 +1,10 @@
 <?php
 
-use App\Events\NewAdminMessageEvent;
+
+use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\GroupController;
-use App\Http\Controllers\WebNotifController;
+
+use App\Http\Controllers\Notif\WebNotifController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -16,27 +18,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::middleware('auth')->group(function() {
-
-    Route::post('send', [\App\Http\Controllers\ChatController::class, 'send']);
-
-    Route::post('channelid', [\App\Http\Controllers\ChatController::class, 'getChannelId']);
-
-    Route::post('message-list', [\App\Http\Controllers\ChatController::class, 'messageList']);
-
-    Route::get('chat', [\App\Http\Controllers\ChatController::class, 'index']);
-
-    Route::post('store-token', [WebNotifController::class, 'storeToken'])->name('store.token');
-
-    Route::post('send-web-notification', [WebNotifController::class, 'sendWebNotification'])->name('send.web-notification');
-
-    Route::prefix('group/')->name('group.')->group(function() {
-
-        Route::post('create', [GroupController::class, 'create'])->name('create');
-    });
-
-});
 
 
 Route::fallback(function(){
