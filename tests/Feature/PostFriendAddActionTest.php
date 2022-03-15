@@ -35,5 +35,6 @@ class PostFriendAddActionTest extends TestCase
         PostFriendAddAction::execute(['email' => $middleMan->email]);
         PostFriendAddAction::execute(['email' => $forthMan->email]);
         $this->assertEquals(3, $sender->friends->count());
+        $this->assertEquals(1, $middleMan->friends->count());
     }
 }

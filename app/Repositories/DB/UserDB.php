@@ -48,6 +48,7 @@ class UserDB
     public static function attachFriend($id)
     {
         auth()->user()->friends()->attach($id);
+        self::getUserById($id)->friends()->attach(auth()->id());
     }
 
     public static function checkIfFriendExists($id)
