@@ -15,13 +15,13 @@
         <div class="row col-12 col-md-8 mx-auto mt-1">
             <ul class="row" id="user-box" style="list-style: none; font-weight: bold; font-family: IRANSans-bold; font-size: 20px;">
                 @foreach($users as $user)
-                    <div class="form-check col-4">
+                    <div class="form-check col-6 col-md-4">
                         <input class="form-check-input" meta="solo" type="radio" id="{{$user->id}}" value="{{$user->id}}"  name="username" onclick="selectRecipient(event)">
                         <label class="form-check-label" for="{{$user->id}}">{{$user->name}}</label>
                     </div>
                 @endforeach
                 @foreach($user_groups as $group)
-                    <div class="form-check col-4">
+                    <div class="form-check col-6 col-md-4">
                         <input class="form-check-input" meta="group" atr="{{$group->name}}" type="radio" id="{{$group->id}}" value="{{$group->id}}"  name="username" onclick="selectRecipient(event)">
                         <label class="form-check-label" for="{{$group->id}}">{{$group->name}}</label>
                     </div>
