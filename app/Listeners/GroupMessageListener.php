@@ -39,7 +39,7 @@ class GroupMessageListener
                     "registration_ids" => $FcmToken,
                     "notification" => [
                         "title" => $sender->name.' Sent New Message To '.$group->name,
-                        "body" =>  auth()->user()->name. ' added you to '. $group->name,
+                        "body" =>  $event->message->body,
                         "icon" => public_path('images/tunnello.png')
                     ]
                 ];
