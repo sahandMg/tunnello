@@ -10,8 +10,10 @@ namespace App\Repositories\Mids;
 
 
 use App\Events\NewGroupEvent;
+use App\Jobs\SendHttpReqJob;
 use App\Repositories\DB\AgentDB;
 use App\Repositories\Validators\GroupCreateValidator;
+use App\Services\CurlRequest;
 use Illuminate\Http\Response;
 
 class GroupCreateMiddleware
@@ -26,6 +28,7 @@ class GroupCreateMiddleware
         list($recipients, $group) = $value;
         foreach ($recipients as $recipient) {
             NewGroupEvent::dispatch($recipient, $group);
+            SendHttpReqJob::dispatch();
         }
         return response()->json('Ok', Response::HTTP_OK);
     }

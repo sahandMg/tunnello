@@ -2,9 +2,13 @@
 
 namespace App\Providers;
 
+use App\Events\NewFriendEvent;
+use App\Events\NewGroupEvent;
 use App\Events\NewGroupMessageEvent;
 use App\Events\NewMessageEvent;
 use App\Listeners\GroupMessageListener;
+use App\Listeners\NewFriendListener;
+use App\Listeners\NewGroupListener;
 use App\Listeners\SoloMessageListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,6 +28,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         NewMessageEvent::class => [ SoloMessageListener::class ],
         NewGroupMessageEvent::class => [ GroupMessageListener::class ],
+        NewGroupEvent::class => [ NewGroupListener::class ],
+        NewFriendEvent::class => [ NewFriendListener::class ],
     ];
 
     /**
