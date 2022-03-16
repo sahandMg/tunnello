@@ -7,6 +7,7 @@ use App\Services\CurlRequest;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class NewGroupListener
 {
@@ -30,7 +31,7 @@ class NewGroupListener
     {
         $users = $event->group->users;
         foreach ($users as $user) {
-            if ($user->id !== $event->user->id) {
+            if ($user->id !== auth()->id()) {
                 $url = config('firebase.base_url');
                 $FcmToken = AgentDB::getAgentRecordById($user->id)->pluck('device_key');
                 if (!$FcmToken->isEmpty()) {
@@ -39,7 +40,7 @@ class NewGroupListener
                         "registration_ids" => $FcmToken,
                         "notification" => [
                             "title" => 'New Message From Tunnello',
-                            "body" =>  $event->user->name. ' added you to '. $event->group->name,
+                            "body" =>  auth()->user()->name. ' added you to '. $event->group->name,
                             "icon" => public_path('images/tunnello.png')
                         ]
                     ];
