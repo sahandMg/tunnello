@@ -30,7 +30,7 @@ class NewGroupListener
     {
         $users = $event->group->users;
         foreach ($users as $user) {
-            if ($user->id !== auth()->id()) {
+            if ($user->id !== $event->user->id) {
                 $url = config('firebase.base_url');
                 $FcmToken = AgentDB::getAgentRecordById($user->id)->pluck('device_key');
                 if (!$FcmToken->isEmpty()) {
