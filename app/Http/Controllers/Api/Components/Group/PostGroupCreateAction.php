@@ -21,5 +21,6 @@ class PostGroupCreateAction extends AbstractComponent
         foreach ($recipients as $recipient) {
             ChannelDB::createNewChannel($recipient->id, $channel_name, 'group');
         }
+        return [$recipients, $group];
     }
 }

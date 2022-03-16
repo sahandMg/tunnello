@@ -20,5 +20,6 @@ class PostFriendAddAction extends AbstractComponent
 
             UserDB::attachFriend($friend->id);
         }
+        return $friend;
     }
 }

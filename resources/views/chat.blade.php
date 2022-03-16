@@ -118,7 +118,17 @@
                 .listen('NewChannelEvent', (e) => {
                     console.log(e);
                     updateChannels();
-                });
+                }).listen('NewGroupEvent', (e) => {
+                console.log(e);
+                location.reload()
+            }).listen('NewFriendEvent', (e) => {
+                console.log(e);
+                location.reload()
+            })
+        }
+
+        function updateRecipients(name, id) {
+
         }
 
         function selectRecipient(e) {

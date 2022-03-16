@@ -11,6 +11,7 @@ namespace App\Repositories\DB;
 
 use App\Events\NewChannelEvent;
 use App\Models\SocketChannel;
+use Imanghafoori\Helpers\Nullable;
 
 class ChannelDB
 {
@@ -35,5 +36,10 @@ class ChannelDB
                     'type' => $type
                 ]);
         return $channel;
+    }
+
+    public static function getChannelByName($name)
+    {
+        return new Nullable(SocketChannel::query()->where('name', $name)->first()) ?? new Nullable(null);
     }
 }

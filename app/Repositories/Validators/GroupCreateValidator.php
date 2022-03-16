@@ -18,7 +18,7 @@ class GroupCreateValidator
     public static function install()
     {
         $v = Validator::make(request()->all(),[
-            'name'=>'required|string|min:3|max:20',
+            'name'=>'required|string|min:1|max:20',
             'members' => 'required'
     ]);
         if ($v->fails()) {

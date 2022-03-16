@@ -9,6 +9,7 @@
 namespace App\Repositories\Mids;
 
 
+use App\Events\NewGroupEvent;
 use App\Repositories\DB\AgentDB;
 use App\Repositories\Validators\GroupCreateValidator;
 use Illuminate\Http\Response;
@@ -21,6 +22,10 @@ class GroupCreateMiddleware
         $value = $next($data);
         if ($value instanceof \Exception) {
             return $value;
+        }
+        list($recipients, $group) = $value;
+        foreach ($recipients as $recipient) {
+            NewGroupEvent::dispatch($recipient, $group);
         }
         return response()->json('Ok', Response::HTTP_OK);
     }
