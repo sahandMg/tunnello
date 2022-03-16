@@ -31,28 +31,25 @@ class NewGroupListener
     {
         $users = $event->group->users;
         foreach ($users as $user) {
-            if ($user->id !== auth()->id()) {
-                $url = config('firebase.base_url');
-                $FcmToken = AgentDB::getAgentRecordById($user->id)->pluck('device_key');
-                if (!$FcmToken->isEmpty()) {
-                    $serverKey = env('FIRE_BASE_SERVER_KEY');
-                    $data = [
-                        "registration_ids" => $FcmToken,
-                        "notification" => [
-                            "title" => 'New Message From Tunnello',
-                            "body" =>  auth()->user()->name. ' added you to '. $event->group->name,
-                            "icon" => public_path('images/tunnello.png')
-                        ]
-                    ];
-                    $encodedData = json_encode($data);
-                    $headers = [
-                        'Authorization:key=' . $serverKey,
-                        'Content-Type: application/json',
-                    ];
-                    CurlRequest::send($url, $headers, $encodedData);
-                }
+            $url = config('firebase.base_url');
+            $FcmToken = AgentDB::getAgentRecordById($user->id)->pluck('device_key');
+            if (!$FcmToken->isEmpty()) {
+                $serverKey = env('FIRE_BASE_SERVER_KEY');
+                $data = [
+                    "registration_ids" => $FcmToken,
+                    "notification" => [
+                        "title" => 'New Message From Tunnello',
+                        "body" =>  auth()->user()->name. ' added you to '. $event->group->name,
+                        "icon" => public_path('images/tunnello.png')
+                    ]
+                ];
+                $encodedData = json_encode($data);
+                $headers = [
+                    'Authorization:key=' . $serverKey,
+                    'Content-Type: application/json',
+                ];
+                CurlRequest::send($url, $headers, $encodedData);
             }
         }
-
     }
 }
