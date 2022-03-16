@@ -15,21 +15,21 @@ class NewGroupEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    public $recipient;
     public $message;
     public $group;
     public $connection = 'redis';
     public $queue = 'broker';
 
-    public function __construct($user, $group)
+    public function __construct($recipient, $group)
     {
-        $this->user = $user;
+        $this->recipient = $recipient;
         $this->group = $group;
     }
 
     public function broadcastOn()
     {
-        return new Channel('channels.'.$this->user->id);
+        return new Channel('channels.'.$this->recipient->id);
     }
 
     public function broadcastWith () {

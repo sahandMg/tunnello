@@ -180,7 +180,7 @@
                 nodes[i].checked === true ? members.push(nodes[i].value) : null;
             }
             axios.post("{!! route('group.create') !!}",{name: name, members: members}).then((resp) => {
-                // location.reload();
+                location.reload();
             }).catch((err) => {
                 console.dir(err.response);
             })

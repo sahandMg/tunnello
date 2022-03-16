@@ -26,7 +26,7 @@ class GroupCreateMiddleware
             return $value;
         }
         list($recipients, $group) = $value;
-        $recipients = $recipients->whereNot('id', auth()->id())->get();
+        $recipients = $recipients->where('id', '!=' ,auth()->id());
         foreach ($recipients as $recipient) {
             NewGroupEvent::dispatch($recipient, $group);
         }

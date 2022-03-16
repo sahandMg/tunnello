@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class SendHttpReqJob implements ShouldQueue
 {
@@ -42,6 +43,7 @@ class SendHttpReqJob implements ShouldQueue
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
         // Execute post
         $result = curl_exec($ch);
+        Log::info($result);
         if ($result === FALSE) {
             die('Curl failed: ' . curl_error($ch));
         }
