@@ -28,7 +28,6 @@ class GroupCreateMiddleware
         list($recipients, $group) = $value;
         foreach ($recipients as $recipient) {
             NewGroupEvent::dispatch($recipient, $group);
-            SendHttpReqJob::dispatch();
         }
         return response()->json('Ok', Response::HTTP_OK);
     }
