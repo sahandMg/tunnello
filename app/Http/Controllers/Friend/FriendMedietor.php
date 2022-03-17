@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Friend;
 
 
+use App\Exceptions\SelfFriendException;
 use App\Exceptions\UserNotFoundException;
 use Imanghafoori\Middlewarize\Middlewarable;
 
@@ -21,6 +22,9 @@ class FriendMedietor
         try{
             return $class_name::execute($args);
         }catch (UserNotFoundException $exception) {
+            return $exception->render();
+        }catch (SelfFriendException $exception)
+        {
             return $exception->render();
         }
     }

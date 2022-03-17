@@ -29,7 +29,6 @@ class PostFriendAddActionTest extends TestCase
         $middleMan = User::find(3);
         $forthMan = User::find(4);
         $this->actingAs($sender);
-        PostFriendAddAction::execute(['email' => $sender->email]);
         PostFriendAddAction::execute(['email' => $recipient->email]);
         PostFriendAddAction::execute(['email' => $recipient->email]);
         PostFriendAddAction::execute(['email' => $middleMan->email]);

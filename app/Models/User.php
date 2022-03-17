@@ -72,6 +72,6 @@ class User extends Authenticatable
 
     public function groupOwner()
     {
-        return $this->hasOne(Group::class, 'owner_id');
+        return $this->hasMany(Group::class, 'owner_id');
     }
 }

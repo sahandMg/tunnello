@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Components\Friend;
 
+use App\Exceptions\SelfFriendException;
 use App\Exceptions\UserNotFoundException;
 use App\Http\Controllers\Api\Components\AbstractComponent;
 use App\Repositories\DB\UserDB;
@@ -16,6 +17,9 @@ class PostFriendAddAction extends AbstractComponent
         $friend = $friend_object->getOrSend(function(){
             throw new UserNotFoundException();
         });
+        if (auth()->id() == $friend->id) {
+            throw new SelfFriendException();
+        }
         if (!UserDB::checkIfFriendExists($friend->id)) {
 
             UserDB::attachFriend($friend->id);

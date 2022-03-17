@@ -23,7 +23,7 @@ class GroupCreateValidator
         ]);
         if ($v->fails()) {
             return response()->json($v->getMessageBag(), Response::HTTP_BAD_REQUEST)->throwResponse();
-        }elseif(auth()->user()->groupOwner->name == request('name')) {
+        }elseif(in_array(request('name'), auth()->user()->groupOwner->pluck('name')->toArray())) {
             return response()->json('Group name has already been taken !', Response::HTTP_BAD_REQUEST)->throwResponse();
         }
     }
