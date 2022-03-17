@@ -38,6 +38,11 @@ class ChannelDB
         return $channel;
     }
 
+    public static function getGroupOwnerChannelByName($name)
+    {
+        return new Nullable(SocketChannel::query()->where('name', $name)->where( 'user_id', auth()->id())->first()) ?? new Nullable(null);
+    }
+
     public static function getChannelByName($name)
     {
         return new Nullable(SocketChannel::query()->where('name', $name)->first()) ?? new Nullable(null);

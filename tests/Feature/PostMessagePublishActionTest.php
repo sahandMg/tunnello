@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Exceptions\ChannelNotFoundException;
 use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
 use App\Http\Controllers\Api\Components\Group\PostGroupCreateAction;
 use App\Http\Controllers\Api\Components\Message\PostMessagePublishAction;
@@ -9,6 +10,8 @@ use App\Models\Group;
 use App\Models\Message;
 use App\Models\SocketChannel;
 use App\Models\User;
+use App\Repositories\DB\GroupDB;
+use App\Services\Channel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
@@ -35,7 +38,9 @@ class PostMessagePublishActionTest extends TestCase
         $this->actingAs($sender);
         $m = [$middleMan->id, $recipient->id];
         $data = ['name' => 'test group33', 'members' => $m];
-        PostGroupCreateAction::execute($data);
+        $group = PostGroupCreateAction::execute($data);
+        $group_channel = Channel::createChannelForGroupMembers([1,2,3]);
+        GroupDB::updateGroupChannel($group, $group_channel);
         PostChannelCreateAction::execute(['recipient_id' => $recipient->id, 'type' => 'solo']);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $recipient->id, 'from' => $sender->id, 'msg' => 'Hey1 man']);
         PostChannelCreateAction::execute(['recipient_id' => $middleMan->id, 'type' => 'solo']);
@@ -43,7 +48,7 @@ class PostMessagePublishActionTest extends TestCase
         PostMessagePublishAction::execute(['type' => 'group', 'to' => Group::first()->id, 'from' => $sender->id, 'msg' => 'Hey3 man']);
         $channels = SocketChannel::get();
         $this->assertEquals(7, $channels->count());
-        $this->assertEquals(groupChannelId([$middleMan->id, $recipient->id, $sender->id]),$channels->where('type', 'group')->first()->name);
+        $this->assertEquals($group_channel->name, $channels->where('type', 'group')->first()->name);
         $this->assertEquals(channelId($recipient->id, $sender->id),$channels->where('type', 'solo')->first()->name);
         $mesgs = Message::get();
         $this->assertEquals(3, $mesgs->count());

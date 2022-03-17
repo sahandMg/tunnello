@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Exceptions\ChannelNotFoundException;
 use App\Models\SocketChannel;
 use App\Models\User;
 use App\Repositories\DB\ChannelDB;
+use App\Repositories\DB\GroupDB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
@@ -38,7 +40,7 @@ class ChannelTest extends TestCase
      * @test
      */
 
-    public function get_user_channels_test()
+    public function getAuthUserSoloChannels()
     {
         User::factory(3)->create();
         $sender = User::find(1);
@@ -51,6 +53,64 @@ class ChannelTest extends TestCase
         ChannelDB::createNewChannel($sender->id, $group_channel_name, 'group');
         $this->assertEquals(encode([1,2,3]), $group_channel_name);
         $this->assertEquals(1, ChannelDB::getAuthUserSoloChannels()->count());
+    }
+
+    /**
+     * @test
+     */
+
+    public function getAuthUserGroupChannels()
+    {
+        User::factory(3)->create();
+        $sender = User::find(1);
+        $recipient = User::find(2);
+        $middleMan = User::find(3);
+        $this->actingAs($sender);
+        $channel_name = channelId($sender->id, $recipient->id);
+        ChannelDB::createNewChannel($sender->id, $channel_name);
+        $group_channel_name = groupChannelId([$middleMan->id, $sender->id, $recipient->id]);
+        ChannelDB::createNewChannel($sender->id, $group_channel_name, 'group');
+        $this->assertEquals(encode([1,2,3]), $group_channel_name);
         $this->assertEquals(1, ChannelDB::getAuthUserGroupChannels()->count());
+    }
+
+    /**
+     * @test
+     */
+    public function getChannelByName()
+    {
+        User::factory(3)->create();
+        $sender = User::find(1);
+        $recipient = User::find(2);
+        $middleMan = User::find(3);
+        $this->actingAs($sender);
+        $channel_name = channelId($sender->id, $recipient->id);
+        ChannelDB::createNewChannel($sender->id, $channel_name);
+        $c = ChannelDB::getChannelByName($channel_name);
+        $this->assertEquals($channel_name, $c->getOrThrow(new ChannelNotFoundException())->name);
+        $c2 = ChannelDB::getChannelByName('dsa');
+        $this->expectException(ChannelNotFoundException::class);
+        $c2->getOrThrow(new ChannelNotFoundException());
+    }
+
+    /**
+     * @test
+     */
+
+    public function getGroupOwnerChannelByName()
+    {
+        User::factory(3)->create();
+        $sender = User::find(1);
+        $recipient = User::find(2);
+        $middleMan = User::find(3);
+        $this->actingAs($sender);
+        GroupDB::createGroup('teddy');
+        $group = GroupDB::getGroupById(1);
+        GroupDB::attachUserToAGroup($group, [$sender->id, $recipient->id, $middleMan->id]);
+        $c = ChannelDB::createNewChannel($sender->id, 'teddy', 'group');
+        GroupDB::updateGroupChannel($group, $c);
+        $oc = ChannelDB::getGroupOwnerChannelByName($c->name);
+        $this->assertEquals($c->name, $oc->getOrThrow(new ChannelNotFoundException())->name);
+        $this->assertEquals($sender->id, $oc->getOrThrow(new ChannelNotFoundException())->user_id);
     }
 }

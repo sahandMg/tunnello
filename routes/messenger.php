@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\Channel\ChannelController;
 use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\Friend\FriendController;
 use App\Http\Controllers\GroupController;
@@ -9,8 +10,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth')->group(function() {
 
     Route::post('publish', [ChatController::class, 'PostMessagePublishAction'])->name('publish');
-
-    Route::post('channelid', [ChatController::class, 'getChannelId']);
 
     Route::get('chat', [ChatController::class, 'GetHomeDataAction']);
 
@@ -21,8 +20,9 @@ Route::middleware('auth')->group(function() {
 
     Route::prefix('channel/')->name('channel.')->group(function() {
 
-        Route::post('create', [ChatController::class, 'PostChannelCreateAction'])->name('create');
-        Route::get('read', [ChatController::class, 'GetChannelListAction'])->name('read');
+        Route::get('id', [ChannelController::class, 'GetChannelIdAction'])->name('id');
+        Route::post('create', [ChannelController::class, 'PostChannelCreateAction'])->name('create');
+        Route::get('read', [ChannelController::class, 'GetChannelListAction'])->name('read');
     });
 
     Route::prefix('friend/')->name('friend.')->group(function() {

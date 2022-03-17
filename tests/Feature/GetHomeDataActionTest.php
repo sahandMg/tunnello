@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Exceptions\ChannelNotFoundException;
 use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
 use App\Http\Controllers\Api\Components\Friend\PostFriendAddAction;
 use App\Http\Controllers\Api\Components\Group\PostGroupCreateAction;
@@ -9,9 +10,12 @@ use App\Http\Controllers\Api\Components\Home\GetHomeDataAction;
 use App\Http\Controllers\Api\Components\Message\PostMessagePublishAction;
 use App\Models\Group;
 use App\Models\Message;
+use App\Models\SocketChannel;
 use App\Models\User;
+use App\Repositories\DB\ChannelDB;
 use App\Repositories\DB\GroupDB;
 use App\Repositories\DB\MessageDB;
+use App\Services\Channel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
@@ -32,8 +36,10 @@ class GetHomeDataActionTest extends TestCase
         $rep = User::find(2);
         $mid = User::find(3);
         $this->actingAs($sender);
-        PostGroupCreateAction::execute(['name' => 'teddy', 'members' => [$rep->id, $mid->id]]);
-        PostChannelCreateAction::execute(['recipient_id' => $rep->id, 'type' => 'solo']);
+        $channel = PostChannelCreateAction::execute(['recipient_id' => $rep->id, 'type' => 'solo']);
+        $group = PostGroupCreateAction::execute(['name' => 'teddy', 'members' => [$rep->id, $mid->id]]);
+        $group_channel = Channel::createChannelForGroupMembers([1,2,3]);
+        GroupDB::updateGroupChannel($group, $group_channel);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $rep->id, 'from' => $sender->id, 'msg' => 'Hey1 man']);
         PostChannelCreateAction::execute(['recipient_id' => $mid->id, 'type' => 'solo']);
         PostMessagePublishAction::execute(['type' => 'solo', 'to' => $mid->id, 'from' => $sender->id, 'msg' => 'Hey2 man']);
@@ -41,7 +47,7 @@ class GetHomeDataActionTest extends TestCase
         PostFriendAddAction::execute(['email' => $rep->email]);
         PostFriendAddAction::execute(['email' => $mid->email]);
         $val = GetHomeDataAction::execute();
-//        'auth_user_messages', 'users', 'user_solo_channels', 'user_groups', 'user_group_channels'
+//        'auth_user_messages', 'friends', 'user_solo_channels', 'user_groups', 'user_group_channels'
         $this->assertEquals(3, $val['auth_user_messages']->count());
         $this->assertEquals(2, $val['friends']->count());
         $this->assertEquals(2, $val['user_solo_channels']->count());

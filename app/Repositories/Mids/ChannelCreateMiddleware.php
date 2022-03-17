@@ -16,6 +16,7 @@ use App\Repositories\Validators\ChannelCreateValidator;
 use App\Repositories\Validators\PublishValidator;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Imanghafoori\Helpers\Nullable;
 
 class ChannelCreateMiddleware
 {
@@ -23,13 +24,17 @@ class ChannelCreateMiddleware
     {
         ChannelCreateValidator::install();
         /**
-         * @var $channel NullChannel
+         * @var $channel Nullable
          */
         $channel = $next($data);
         $user_solo_channels =  ChannelDB::getAuthUserSoloChannels();
         $user_group_channels = ChannelDB::getAuthUserGroupChannels();
-        if ($channel->wasRecentlyCreated) {
-            NewChannelEvent::dispatch($channel, auth()->user(), request()->get('recipient_id'));
+        $data = $channel->getOr(false);
+        if ($data) {
+            if ($data->wasRecentlyCreated){
+
+                NewChannelEvent::dispatch($channel, auth()->user(), request()->get('recipient_id'));
+            }
         }
         return response()->json(['solo' => $user_solo_channels, 'group' => $user_group_channels], Response::HTTP_OK);
 

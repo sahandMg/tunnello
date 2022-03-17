@@ -183,6 +183,7 @@
                 location.reload();
             }).catch((err) => {
                 console.dir(err.response);
+                alert(err.response.data);
             })
         }
 

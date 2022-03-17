@@ -9,7 +9,10 @@
 namespace App\Repositories\DB;
 
 
+use App\Exceptions\ChannelNotFoundException;
 use App\Models\Group;
+use App\Models\SocketChannel;
+use Imanghafoori\Helpers\Nullable;
 
 class GroupDB
 {
@@ -34,5 +37,16 @@ class GroupDB
     public static function getGroupUsers($group)
     {
         return $group->users;
+    }
+
+    public static function getGroupOwner($group)
+    {
+        return $group->owner;
+    }
+
+    public static function updateGroupChannel(Group $group, $channel)
+    {
+        // channel that belongs to group owner
+        $group->update(['channel_id' => $channel->id]);
     }
 }

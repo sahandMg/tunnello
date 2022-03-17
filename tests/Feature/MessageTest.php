@@ -12,6 +12,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class MessageTest extends TestCase
@@ -29,7 +30,7 @@ class MessageTest extends TestCase
      * @test
      * @return void
      */
-    public function user_can_create_message()
+    public function createNewMessage()
     {
         User::factory(2)->create();
         $sender = User::find(1);
@@ -48,24 +49,7 @@ class MessageTest extends TestCase
     /**
      * @test
      */
-    public function user_can_create_group()
-    {
-        User::factory(2)->create();
-        User::factory(2)->create();
-        $sender = User::find(1);
-        $recipient = User::find(2);
-        $this->actingAs($sender);
-        $this->actingAs($recipient);
-        $group = GroupDB::createGroup('teddy');
-        GroupDB::attachUserToAGroup($group, [$sender->id, $recipient->id]);
-        $this->assertEquals(1, Group::get()->count());
-        $this->assertEquals(2, DB::table('group_user')->count());
-    }
-
-    /**
-     * @test
-     */
-    public function user_can_create_group_message()
+    public function createNewGroupMessage()
     {
         User::factory(2)->create();
         $sender = User::find(1);
@@ -84,4 +68,43 @@ class MessageTest extends TestCase
         MessageDB::createNewGroupMessage($data['body'], $data['group_id'] , $data['sender_id']);
         $this->assertEquals(1, Message::get()->count());
     }
+
+    /**
+     * @test
+     */
+
+    public function getAuthUserSoloMessages()
+    {
+        User::factory(2)->create();
+        $sender = User::find(1);
+        $recipient = User::find(2);
+        $this->actingAs($sender);
+        $this->actingAs($recipient);
+        MessageDB::createNewMessage('Salammm',$recipient->id, $sender->id);
+        MessageDB::createNewMessage('Salammm',$recipient->id, $sender->id);
+        MessageDB::createNewMessage('Salammm',$recipient->id, $sender->id);
+        $this->assertEquals(3, MessageDB::getAuthUserSoloMessages()->count());
+    }
+
+    /**
+     * @test
+     */
+
+    public function getAuthUserGroupMessages()
+    {
+        User::factory(2)->create();
+        $sender = User::find(1);
+        $recipient = User::find(2);
+        $this->actingAs($sender);
+        $this->actingAs($recipient);
+        $group = GroupDB::createGroup('teddy');
+        $this->assertNotNull($group);
+        GroupDB::attachUserToAGroup($group, [$sender->id, $recipient->id]);
+        MessageDB::createNewGroupMessage('Salammm', $group->id, $sender->id);
+        MessageDB::createNewGroupMessage('Salammm', $group->id, $sender->id);
+        MessageDB::createNewGroupMessage('Salammm', $group->id, $sender->id);
+        $msgs =  MessageDB::getAuthUserGroupMessages();
+        $this->assertEquals(3, $msgs[0]->count());
+    }
+
 }

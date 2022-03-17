@@ -26,19 +26,4 @@ class ChatController extends Controller
     {
         return ChatMediator::middlewared(PublishMiddleware::class)->proxy(PostMessagePublishAction::class, \request()->all());
     }
-
-    public function getChannelId(Request $request)
-    {
-        return channelId($request->from, $request->to);
-    }
-
-    public function PostChannelCreateAction()
-    {
-        return ChatMediator::middlewared(ChannelCreateMiddleware::class)->proxy(PostChannelCreateAction::class, \request()->all());
-    }
-
-    public function GetChannelListAction()
-    {
-        return ChatMediator::proxy(GetChannelListAction::class, \request()->all());
-    }
 }

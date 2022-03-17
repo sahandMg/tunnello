@@ -16,11 +16,6 @@ class PostGroupCreateAction extends AbstractComponent
         $members[] = user()->id;
         $group = GroupDB::createGroup($name);
         GroupDB::attachUserToAGroup($group, $members);
-        $recipients = GroupDB::getGroupUsers($group);
-        $channel_name = groupChannelId($members);
-        foreach ($recipients as $recipient) {
-            ChannelDB::createNewChannel($recipient->id, $channel_name, 'group');
-        }
-        return [$recipients, $group];
+        return $group;
     }
 }

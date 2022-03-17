@@ -16,6 +16,10 @@ function groupChannelId(array $ids) {
     return \Vinkla\Hashids\Facades\Hashids::encode($ids);
 }
 
+function generateChannelName() {
+    return \Illuminate\Support\Str::random(10);
+}
+
 if (!function_exists('user')) {
     function user()
     {

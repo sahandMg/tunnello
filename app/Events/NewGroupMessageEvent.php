@@ -30,12 +30,7 @@ class NewGroupMessageEvent implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        $member_ids = $this->group->users->pluck('id')->sort()->toArray();
-        return new Channel(groupChannelId($member_ids));
-//        $channels = $this->user->channels->map(function ($channel) {
-//            return new Channel($channel->name);
-//        })->toArray();
-//        return $channels;
+        return new Channel($this->group->channel->name);
     }
 
     public function broadcastWith () {
