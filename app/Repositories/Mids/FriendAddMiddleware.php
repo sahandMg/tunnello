@@ -9,9 +9,9 @@
 namespace App\Repositories\Mids;
 
 use App\Events\NewFriendEvent;
+use App\Repositories\Facades\Response;
 use App\Repositories\Validators\FriendAddValidator;
-use App\Repositories\Validators\PublishValidator;
-use Illuminate\Http\Response;
+
 
 class FriendAddMiddleware
 {
@@ -24,7 +24,7 @@ class FriendAddMiddleware
         }
         $friend = $value;
         NewFriendEvent::dispatch(auth()->user(), $friend);
-        return response()->json('Ok', Response::HTTP_OK);
+        return Response::addFriend($friend);
 
     }
 }

@@ -11,8 +11,10 @@ Route::middleware('auth')->group(function() {
 
     Route::post('publish', [ChatController::class, 'PostMessagePublishAction'])->name('publish');
 
-    Route::get('chat', [ChatController::class, 'GetHomeDataAction']);
-
+//    Route::view('chat', 'chat');
+    Route::get('chats', [ChatController::class, 'GetHomeDataAction']);
+    Route::post('chats', [ChatController::class, 'PostHomeDataAction']);
+    Route::post('pair-messages', [ChatController::class, 'PostPairMessages'])->name('pairMessages');
     Route::prefix('group/')->name('group.')->group(function() {
 
         Route::post('create', [GroupController::class, 'PostGroupCreateAction'])->name('create');

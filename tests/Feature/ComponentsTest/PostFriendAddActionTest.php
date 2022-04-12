@@ -29,10 +29,10 @@ class PostFriendAddActionTest extends TestCase
         $middleMan = User::find(3);
         $forthMan = User::find(4);
         $this->actingAs($sender);
-        PostFriendAddAction::execute(['email' => $recipient->email]);
-        PostFriendAddAction::execute(['email' => $recipient->email]);
-        PostFriendAddAction::execute(['email' => $middleMan->email]);
-        PostFriendAddAction::execute(['email' => $forthMan->email]);
+        PostFriendAddAction::execute(['phone' => $recipient->phone]);
+        PostFriendAddAction::execute(['phone' => $recipient->phone]);
+        PostFriendAddAction::execute(['phone' => $middleMan->phone]);
+        PostFriendAddAction::execute(['phone' => $forthMan->phone]);
         $this->assertEquals(3, $sender->friends->count());
         $this->assertEquals(1, $middleMan->friends->count());
     }

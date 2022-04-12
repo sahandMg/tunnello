@@ -4,9 +4,12 @@ namespace Tests\Feature\HTTPTest;
 
 use App\Models\User;
 
+use App\Repositories\DB\AuthDB;
+use App\Services\DataFormatter;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithSession;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
@@ -24,25 +27,19 @@ class AuthRoutesTest extends TestCase
      * @test
      * @return void
      */
-    public function register_test()
+    public function register_test_route()
     {
-        $this->startSession();
-        $response = $this->get('/register');
         $data = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
+            'fullname' => $this->faker->name,
+            'username' => $this->faker->name,
+            'phone' => randomPhone(),
             'password' => '32132332321123',
             'password_confirmation' => '32132332321123',
-            '_token' => csrf_token()
         ];
-        $response = $this->post('/register', $data);
-        if (session()->has('errors')) {
-            dd(session('errors')->all());
-        }
-        $response->assertRedirect('/home');
-        $this->assertEquals(302, $response->getStatusCode());
+        $response = $this->post('/api/register', $data);
+        $response->assertStatus(200);
         $this->assertEquals(1, User::get()->count());
-        $response = $this->get('/chat');
+        $response->assertJsonFragment(['status' => 200]);
         $response->assertOk();
     }
 
@@ -53,30 +50,73 @@ class AuthRoutesTest extends TestCase
     public function register_test_with_error()
     {
         $data = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
-            'password' => '3213233232113', // changed
+            'fullname' => $this->faker->name,
+//            'username' => $this->faker->name,
+            'phone' => randomPhone(),
+            'password' => '32132332321123',
             'password_confirmation' => '32132332321123',
             '_token' => csrf_token()
         ];
-        $response = $this->post('/register', $data)->assertSessionHasErrors();
+        $response = $this->post('/api/register', $data);
+        $response->assertStatus(400);
+        $this->assertEquals(0, User::get()->count());
+        $response->assertJsonFragment(['status' => 400]);
+//        $response = $this->post('/register', $data)->assertSessionHasErrors();
     }
 
     /**
      * @test
      */
 
-    public function login_test()
+    public function login_route_test()
     {
-        $data = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
+        $reg_data = [
+            'fullname' => $this->faker->name,
+            'username' => $this->faker->name,
+            'phone' => randomPhone(),
             'password' => '32132332321123',
             'password_confirmation' => '32132332321123',
-            '_token' => csrf_token()
         ];
-        $this->post('/register', $data);
-        $response = $this->post('/login', $data);
-        $response->assertRedirect('/home');
+        $login_data = [
+//            'username' => $reg_data['username'],
+            'phone' => $reg_data['phone'],
+            'password' => '32132332321123',
+        ];
+        $reg_resp = $this->post('/api/register', $reg_data);
+        $token = json_decode($reg_resp->content(), true)['token'];
+        $response = $this->post('/api/login', $login_data);
+        $response->assertOk();
+        $this->assertTrue(auth()->check());
+        $this->assertEquals(1, User::get()->count());
+
+    }
+
+    /**
+     * @test
+     */
+
+    public function logout_route_test()
+    {
+        $reg_data = [
+            'fullname' => $this->faker->name,
+            'username' => $this->faker->name,
+            'phone' => randomPhone(),
+            'password' => '32132332321123',
+            'password_confirmation' => '32132332321123',
+        ];
+        $login_data = [
+//            'username' => $reg_data['username'],
+            'phone' => $reg_data['phone'],
+            'password' => '32132332321123',
+        ];
+        $reg_resp = $this->post('/api/register', $reg_data);
+        $token = json_decode($reg_resp->content(), true)['token'];
+        $this->post('/api/login', $login_data);
+        $this->assertTrue(auth()->check());
+        $this->assertEquals(1, User::get()->count());
+        $response = $this->post('/api/logout');
+        $response->assertOk();
+        $this->assertTrue(!auth()->check());
+
     }
 }

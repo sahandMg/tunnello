@@ -38,3 +38,13 @@ if (!function_exists('decode')) {
         return Hashids::decode($var);
     }
 }
+
+if (!function_exists('getToken')) {
+    function getToken() {
+        return \Tymon\JWTAuth\Facades\JWTAuth::getToken();
+    }
+}
+
+function randomPhone() {
+    return '09113076'.rand(0,9).rand(0,9).rand(0,9);
+}

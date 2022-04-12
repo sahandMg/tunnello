@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Components\Friend;
 
+use App\Exceptions\DuplicateFriendException;
 use App\Exceptions\SelfFriendException;
 use App\Exceptions\UserNotFoundException;
 use App\Http\Controllers\Api\Components\AbstractComponent;
@@ -12,9 +13,8 @@ class PostFriendAddAction extends AbstractComponent
 {
     public static function execute($arguments = null)
     {
-        $email = $arguments['email'];
-        $friend_object = UserDB::getUserByEmail($email);
-        $friend = $friend_object->getOrSend(function(){
+        $friend_object = isset($arguments['phone']) ? UserDB::getUserByPhone($arguments['phone']) : UserDB::getUserByUsername($arguments['username']);
+        $friend = $friend_object->getOrSend(function () {
             throw new UserNotFoundException();
         });
         if (auth()->id() == $friend->id) {
@@ -23,7 +23,9 @@ class PostFriendAddAction extends AbstractComponent
         if (!UserDB::checkIfFriendExists($friend->id)) {
 
             UserDB::attachFriend($friend->id);
+            return $friend;
+        } else {
+            throw new DuplicateFriendException();
         }
-        return $friend;
     }
 }

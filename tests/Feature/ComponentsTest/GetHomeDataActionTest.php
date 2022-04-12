@@ -6,7 +6,7 @@ use App\Exceptions\ChannelNotFoundException;
 use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
 use App\Http\Controllers\Api\Components\Friend\PostFriendAddAction;
 use App\Http\Controllers\Api\Components\Group\PostGroupCreateAction;
-use App\Http\Controllers\Api\Components\Home\GetHomeDataAction;
+use App\Http\Controllers\Api\Components\Home\PostHomeDataAction;
 use App\Http\Controllers\Api\Components\Message\PostMessagePublishAction;
 use App\Models\Group;
 use App\Models\Message;
@@ -46,7 +46,7 @@ class GetHomeDataActionTest extends TestCase
         PostMessagePublishAction::execute(['type' => 'group', 'to' => Group::first()->id, 'from' => $sender->id, 'msg' => 'Hey3 man']);
         PostFriendAddAction::execute(['email' => $rep->email]);
         PostFriendAddAction::execute(['email' => $mid->email]);
-        $val = GetHomeDataAction::execute();
+        $val = PostHomeDataAction::execute();
 //        'auth_user_messages', 'friends', 'user_solo_channels', 'user_groups', 'user_group_channels'
         $this->assertEquals(3, $val['auth_user_messages']->count());
         $this->assertEquals(2, $val['friends']->count());

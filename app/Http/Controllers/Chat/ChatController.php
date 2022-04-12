@@ -2,24 +2,34 @@
 
 namespace App\Http\Controllers\Chat;
 
-use App\Http\Controllers\Api\Components\Channel\GetChannelListAction;
-use App\Http\Controllers\Api\Components\Channel\PostChannelCreateAction;
+
 use App\Http\Controllers\Api\Components\Home\GetHomeDataAction;
+use App\Http\Controllers\Api\Components\Home\PostHomeDataAction;
 use App\Http\Controllers\Api\Components\Message\PostMessagePublishAction;
-use App\Http\Controllers\Chat\ChatMediator;
 use App\Http\Controllers\Controller;
-use App\Repositories\Mids\ChannelCreateMiddleware;
+use App\Repositories\DB\MessageDB;
+use App\Repositories\Facades\Response;
 use App\Repositories\Mids\HomeMiddleware;
 use App\Repositories\Mids\PublishMiddleware;
-use App\Repositories\Mids\NotificationKeyMiddleware;
-use App\Repositories\Nulls\NullChannel;
 use Illuminate\Http\Request;
 
 class ChatController extends Controller
 {
+
     public function GetHomeDataAction()
     {
-        return ChatMediator::middlewared(HomeMiddleware::class)->proxy(GetHomeDataAction::class);
+        $data =  ChatMediator::proxy(GetHomeDataAction::class);
+        return Response::chats($data);
+    }
+
+    public function PostPairMessages(Request $request)
+    {
+        return MessageDB::getUserP2PMessages($request->get('recipient_id'));
+    }
+
+    public function PostHomeDataAction()
+    {
+        return ChatMediator::middlewared(HomeMiddleware::class)->proxy(PostHomeDataAction::class);
     }
 
     public function PostMessagePublishAction()

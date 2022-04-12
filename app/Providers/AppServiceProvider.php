@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Repositories\Facades\Response;
+use App\Repositories\Respones\ApiResponse;
+use App\Repositories\Respones\ViewResponse;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +17,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Log::info(request()->has('phone'));
+        $class = request('client') == 'web'? new ViewResponse() : new ApiResponse;
+        Response::shouldProxyTo($class);
     }
 
     /**

@@ -35,9 +35,14 @@ class UserDB
         return $user;
     }
 
-    public static function getUserByEmail($email)
+    public static function getUserByPhone($phone)
     {
-        return new Nullable(User::query()->where('email', $email)->first()) ?? new Nullable(null);
+        return new Nullable(User::query()->where('phone', $phone)->first()) ?? new Nullable(null);
+    }
+
+    public static function getUserByUsername($username)
+    {
+        return new Nullable(User::query()->where('username', $username)->first()) ?? new Nullable(null);
     }
 
     public static function getAuthUserFriends()

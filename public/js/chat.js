@@ -1,100 +1,82 @@
-(function(){
+$(document).ready(function(){
+	
+  var preloadbg = document.createElement("img");
+  preloadbg.src = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/245657/timeline1.png";
   
-  var chat = {
-    messageToSend: '',
-    messageResponses: [
-      'Why did the web developer leave the restaurant? Because of the table layout.',
-      'How do you comfort a JavaScript bug? You console it.',
-      'An SQL query enters a bar, approaches two tables and asks: "May I join you?"',
-      'What is the most used language in programming? Profanity.',
-      'What is the object-oriented way to become wealthy? Inheritance.',
-      'An SEO expert walks into a bar, bars, pub, tavern, public house, Irish pub, drinks, beer, alcohol'
-    ],
-    init: function() {
-      this.cacheDOM();
-      this.bindEvents();
-      this.render();
-    },
-    cacheDOM: function() {
-      this.$chatHistory = $('.chat-history');
-      this.$button = $('button');
-      this.$textarea = $('#message-to-send');
-      this.$chatHistoryList =  this.$chatHistory.find('ul');
-    },
-    bindEvents: function() {
-      this.$button.on('click', this.addMessage.bind(this));
-      this.$textarea.on('keyup', this.addMessageEnter.bind(this));
-    },
-    render: function() {
-      this.scrollToBottom();
-      if (this.messageToSend.trim() !== '') {
-        var template = Handlebars.compile( $("#message-template").html());
-        var context = { 
-          messageOutput: this.messageToSend,
-          time: this.getCurrentTime()
-        };
-
-        this.$chatHistoryList.append(template(context));
-        this.scrollToBottom();
-        this.$textarea.val('');
-        
-        // responses
-        var templateResponse = Handlebars.compile( $("#message-response-template").html());
-        var contextResponse = { 
-          response: this.getRandomItem(this.messageResponses),
-          time: this.getCurrentTime()
-        };
-        
-        setTimeout(function() {
-          this.$chatHistoryList.append(templateResponse(contextResponse));
-          this.scrollToBottom();
-        }.bind(this), 1500);
-        
-      }
-      
-    },
-    
-    addMessage: function() {
-      this.messageToSend = this.$textarea.val()
-      this.render();         
-    },
-    addMessageEnter: function(event) {
-        // enter was pressed
-        if (event.keyCode === 13) {
-          this.addMessage();
-        }
-    },
-    scrollToBottom: function() {
-       this.$chatHistory.scrollTop(this.$chatHistory[0].scrollHeight);
-    },
-    getCurrentTime: function() {
-      return new Date().toLocaleTimeString().
-              replace(/([\d]+:[\d]{2})(:[\d]{2})(.*)/, "$1$3");
-    },
-    getRandomItem: function(arr) {
-      return arr[Math.floor(Math.random()*arr.length)];
-    }
-    
-  };
-  
-  chat.init();
-  
-  var searchFilter = {
-    options: { valueNames: ['name'] },
-    init: function() {
-      var userList = new List('people-list', this.options);
-      var noItems = $('<li id="no-items-found">No items found</li>');
-      
-      userList.on('updated', function(list) {
-        if (list.matchingItems.length === 0) {
-          $(list.list).append(noItems);
-        } else {
-          noItems.detach();
-        }
-      });
-    }
-  };
-  
-  searchFilter.init();
-  
-})();
+	$("#searchfield").focus(function(){
+		if($(this).val() == "Search contacts..."){
+			$(this).val("");
+		}
+	});
+	$("#searchfield").focusout(function(){
+		if($(this).val() == ""){
+			$(this).val("Search contacts...");
+			
+		}
+	});
+	
+	$("#sendmessage input").focus(function(){
+		if($(this).val() == "Send message..."){
+			$(this).val("");
+		}
+	});
+	$("#sendmessage input").focusout(function(){
+		if($(this).val() == ""){
+			$(this).val("Send message...");
+			
+		}
+	});
+		
+	
+	$(".friend").each(function(){		
+		$(this).click(function(){
+			var childOffset = $(this).offset();
+			var parentOffset = $(this).parent().parent().offset();
+			var childTop = childOffset.top - parentOffset.top;
+			var clone = $(this).find('img').eq(0).clone();
+			var top = childTop+12+"px";
+			
+			$(clone).css({'top': top}).addClass("floatingImg").appendTo("#chatbox");									
+			
+			setTimeout(function(){$("#profile p").addClass("animate");$("#profile").addClass("animate");}, 100);
+			setTimeout(function(){
+				$("#chat-messages").addClass("animate");
+				$('.cx, .cy').addClass('s1');
+				setTimeout(function(){$('.cx, .cy').addClass('s2');}, 100);
+				setTimeout(function(){$('.cx, .cy').addClass('s3');}, 200);			
+			}, 150);														
+			
+			$('.floatingImg').animate({
+				'width': "68px",
+				'left':'108px',
+				'top':'20px'
+			}, 200);
+			
+			var name = $(this).find("p strong").html();
+			var email = $(this).find("p span").html();														
+			$("#profile p").html(name);
+			$("#profile span").html(email);			
+			
+			$(".message").not(".right").find("img").attr("src", $(clone).attr("src"));									
+			$('#friendslist').fadeOut();
+			$('#chatview').fadeIn();
+		
+			
+			$('#close').unbind("click").click(function(){				
+				$("#chat-messages, #profile, #profile p").removeClass("animate");
+				$('.cx, .cy').removeClass("s1 s2 s3");
+				$('.floatingImg').animate({
+					'width': "40px",
+					'top':top,
+					'left': '12px'
+				}, 200, function(){$('.floatingImg').remove()});				
+				
+				setTimeout(function(){
+					$('#chatview').fadeOut();
+					$('#friendslist').fadeIn();				
+				}, 50);
+			});
+			
+		});
+	});			
+});

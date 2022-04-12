@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Repositories\DB\AuthDB;
+use App\Services\DataFormatter;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithSession;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -26,25 +28,66 @@ class AuthTest extends TestCase
      * @test
      * @return void
      */
-    public function register_new_user_test()
+    public function RegisterNewUser()
     {
-        $this->startSession();
-        $response = $this->get('/register');
         $data = [
-            'name' => $this->faker->name,
-            'email' => $this->faker->email,
+//            'fullname' => $this->faker->name,
+            'username' => $this->faker->name,
+            'phone'    =>  randomPhone(),
             'password' => '32132332321123',
-            'password_confirmation' => '32132332321123',
-            '_token' => csrf_token()
         ];
-        $response = $this->post('/register', $data);
-        if (session()->has('errors')) {
-            dd(session('errors')->all());
-        }
-        $response->assertRedirect('/home');
-        $this->assertEquals(302, $response->getStatusCode());
+        AuthDB::RegisterNewUser($data);
         $this->assertEquals(1, User::get()->count());
-        $response = $this->get('/chat');
-        $response->assertOk();
+    }
+
+    /**
+     * A basic feature test example.
+     * @test
+     * @return void
+     */
+    public function LoginUser()
+    {
+        $reg_data = [
+            'fullname' => $this->faker->name,
+            'username' => $this->faker->name,
+            'phone'    =>  randomPhone(),
+            'password' => '32132332321123',
+        ];
+        $login_data = [
+            'username' => $reg_data['username'],
+            'phone' => $reg_data['phone'],
+            'password' => '32132332321123',
+        ];
+        AuthDB::RegisterNewUser($reg_data);
+        $this->assertEquals(1, User::get()->count());
+        $state = AuthDB::LoginUser($login_data);
+        $this->assertTrue(is_string($state));
+
+    }
+
+    /**
+     * A basic feature test example.
+     * @test
+     * @return void
+     */
+    public function LogoutUser()
+    {
+        $reg_data = [
+            'fullname' => $this->faker->name,
+            'username' => $this->faker->name,
+            'phone'    =>  randomPhone(),
+            'password' => '32132332321123',
+        ];
+        $login_data = [
+            'username' => $reg_data['username'],
+            'phone' => $reg_data['phone'],
+            'password' => '32132332321123',
+        ];
+        AuthDB::RegisterNewUser($reg_data);
+        $this->assertEquals(1, User::get()->count());
+        $state = AuthDB::LoginUser($login_data);
+        AuthDB::LogoutUser();
+        $this->assertTrue(!auth()->check());
+
     }
 }

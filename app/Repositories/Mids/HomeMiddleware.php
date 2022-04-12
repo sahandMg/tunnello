@@ -10,6 +10,7 @@ namespace App\Repositories\Mids;
 
 
 use App\Repositories\DB\AgentDB;
+use App\Repositories\Facades\Response;
 
 class HomeMiddleware
 {
@@ -20,6 +21,6 @@ class HomeMiddleware
         if ($value instanceof \Exception) {
             return $value;
         }
-        return view('chat', $value);
+        return Response::home($value);
     }
 }

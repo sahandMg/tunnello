@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api\Components\Home;
 
 use App\Http\Controllers\Api\Components\AbstractComponent;
-use App\Repositories\DB\AgentDB;
 use App\Repositories\DB\ChannelDB;
 use App\Repositories\DB\MessageDB;
 use App\Repositories\DB\UserDB;

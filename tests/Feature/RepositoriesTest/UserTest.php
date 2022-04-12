@@ -67,6 +67,34 @@ class UserTest extends TestCase
      * @test
      */
 
+    public function getUserByUsername()
+    {
+        User::factory(3)->create();
+        $sender = User::find(1);
+        $recipient = User::find(2);
+        $mid = User::find(3);
+        $this->actingAs($sender);
+        $this->assertEquals($recipient->id, UserDB::getUserByUsername($recipient->username)->getOr('')->id);
+    }
+
+    /**
+     * @test
+     */
+
+    public function getUserByPhone()
+    {
+        User::factory(3)->create();
+        $sender = User::find(1);
+        $recipient = User::find(2);
+        $mid = User::find(3);
+        $this->actingAs($sender);
+        $this->assertEquals($recipient->id, UserDB::getUserByPhone($recipient->phone)->getOr('')->id);
+    }
+
+    /**
+     * @test
+     */
+
     public function attachFriend()
     {
         User::factory(3)->create();

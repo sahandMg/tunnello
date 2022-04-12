@@ -20,7 +20,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.4",
         "mtvs/eloquent-hashids": "^3.2",
-        "predis/predis": "^1.1"
+        "predis/predis": "^1.1",
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.6",
