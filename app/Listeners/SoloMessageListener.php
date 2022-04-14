@@ -34,7 +34,7 @@ class SoloMessageListener
             $data = [
                 "registration_ids" => $FcmToken,
                 "notification" => [
-                    "title" => 'New Message From ' . $event->user->name,
+                    "title" => $event->user->username,
                     "body" => $event->message->body,
                     "icon" => public_path('images/tunnello.png')
                 ]

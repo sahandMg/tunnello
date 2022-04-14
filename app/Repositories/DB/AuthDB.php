@@ -23,7 +23,9 @@ class AuthDB
             'password' => bcrypt($data['password']),
             'fullname' => $data['fullname'] ?? null,
             'phone' => $data['phone'],
+            'easy_token' => '###'
         ]);
+        $user->update(['easy_token' => encode($user->id)]);
         return $user;
     }
 

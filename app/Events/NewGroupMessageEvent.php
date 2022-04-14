@@ -35,9 +35,9 @@ class NewGroupMessageEvent implements ShouldBroadcast
 
     public function broadcastWith () {
         return [
-            'sender_name'     => $this->user->name,
+            'sender_name'     => $this->user->username,
             'group_name'      => $this->group->name,
-            'sender_id'       => $this->user->id,
+            'sender_id'       => encode($this->user->id),
             'message'         => $this->message->body,
             'on'              => now()->toDateTimeString(),
         ];

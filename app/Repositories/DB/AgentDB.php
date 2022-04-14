@@ -51,4 +51,8 @@ class AgentDB
         $agent->update(['device_key' => $token]);
     }
 
+    public static function clearUserDeviceKey() {
+        AgentModel::query()->where('user_id', auth()->id())->update(['device_key' => null]);
+    }
+
 }

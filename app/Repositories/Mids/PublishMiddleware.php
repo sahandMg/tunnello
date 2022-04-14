@@ -9,7 +9,7 @@
 namespace App\Repositories\Mids;
 
 use App\Repositories\Validators\PublishValidator;
-use Illuminate\Http\Response;
+use \App\Repositories\Facades\Response;
 
 class PublishMiddleware
 {
@@ -20,7 +20,6 @@ class PublishMiddleware
         if ($value instanceof \Exception) {
             return $value;
         }
-        return response()->json('Ok', Response::HTTP_OK);
-
+        return Response::sendMessage();
     }
 }

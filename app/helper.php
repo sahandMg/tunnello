@@ -35,7 +35,7 @@ if (!function_exists('encode')) {
 
 if (!function_exists('decode')) {
     function decode($var) {
-        return Hashids::decode($var);
+        return Hashids::decode($var)[0];
     }
 }
 

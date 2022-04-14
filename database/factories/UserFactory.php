@@ -20,6 +20,7 @@ class UserFactory extends Factory
             'phone'    =>  '09113076'.rand(0,9).rand(0,9).rand(0,9),
             'email_verified_at' => now(),
             'password' => bcrypt(123321), // password
+            'easy_token' => Str::random(5), // password
             'remember_token' => Str::random(10),
         ];
     }

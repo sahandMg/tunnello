@@ -21,6 +21,6 @@ class HomeMiddleware
         if ($value instanceof \Exception) {
             return $value;
         }
-        return Response::home($value);
+        return Response::chats($value);
     }
 }

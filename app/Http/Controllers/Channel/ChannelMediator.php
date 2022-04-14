@@ -21,6 +21,7 @@ class ChannelMediator
         try{
             return $class_name::execute($args);
         }catch (\Exception $exception) {
+//            $exception->render();
             dd($exception->getMessage(), $exception->getFile(), $exception->getLine());
         }catch (UserNotFoundException $exception) {
             return $exception->render();

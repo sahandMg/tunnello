@@ -18,13 +18,13 @@ class ChatController extends Controller
 
     public function GetHomeDataAction()
     {
-        $data =  ChatMediator::proxy(GetHomeDataAction::class);
-        return Response::chats($data);
+        return ChatMediator::middlewared(HomeMiddleware::class)->proxy(GetHomeDataAction::class);
     }
 
     public function PostPairMessages(Request $request)
     {
-        return MessageDB::getUserP2PMessages($request->get('recipient_id'));
+        $data = MessageDB::getUserP2PMessages(decode($request->get('recipient_id')));
+        return Response::pairMessage($data);
     }
 
     public function PostHomeDataAction()

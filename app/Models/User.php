@@ -24,8 +24,8 @@ class User extends Authenticatable implements JWTSubject
         'username',
         'phone',
         'password',
-        'device_key',
-        'agent_id'
+        'agent_id',
+        'easy_token'
     ];
 
     /**
@@ -95,5 +95,9 @@ class User extends Authenticatable implements JWTSubject
     public function groupOwner()
     {
         return $this->hasMany(Group::class, 'owner_id');
+    }
+
+    public function getIdAttribute($val) {
+        return $val;
     }
 }

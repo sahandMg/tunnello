@@ -33,8 +33,8 @@ class NewFriendEvent implements ShouldBroadcast
 
     public function broadcastWith () {
         return [
-            'friend_name'      => $this->friend->name,
-            'friend_id'      => $this->friend->id,
+            'friend_name'      => $this->friend->username,
+            'friend_id'      => encode($this->friend->id),
             'on'              => now()->toDateTimeString(),
         ];
     }

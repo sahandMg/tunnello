@@ -9,6 +9,7 @@
 namespace App\Repositories\Mids;
 
 
+use App\Repositories\Facades\Response;
 use App\Repositories\Validators\NotificationKeyStoreValidator;
 use App\Repositories\Validators\NotificationSendValidator;
 
@@ -21,6 +22,6 @@ class NotificationKeyMiddleware
         if ($value instanceof \Exception) {
             return $value;
         }
-        return response()->json(['Token successfully stored.']);
+        return Response::storeToken();
     }
 }

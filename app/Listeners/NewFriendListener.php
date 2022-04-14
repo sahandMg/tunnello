@@ -35,7 +35,7 @@ class NewFriendListener
                 "registration_ids" => $FcmToken,
                 "notification" => [
                     "title" => 'New Message From Tunnello',
-                    "body" =>  $event->user->name. ' added you as a friend!',
+                    "body" =>  $event->user->username. ' added you as a friend!',
                     "icon" => public_path('images/tunnello.png')
                 ]
             ];

@@ -27,7 +27,7 @@ class MessageRoutesTest extends TestCase
             'password_confirmation' => '32132332321123',
             '_token' => csrf_token()
         ];
-        $this->post('/register', $data);
+        $this->post('/api/register', $data);
     }
 
     /**
@@ -39,6 +39,7 @@ class MessageRoutesTest extends TestCase
         $sender = User::find(1);
         $recp = User::find(2);
         $middle = User::find(3);
+        $this->actingAs($sender);
         $this->post(route('group.create'), ['name' => 'teddy', 'members' => [$sender->id, $recp->id, $middle->id]])
             ->assertOk();
         $this->post(route('channel.create'), ['type' => 'solo', 'recipient_id' => $recp->id])

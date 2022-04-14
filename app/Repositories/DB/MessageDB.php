@@ -10,6 +10,7 @@ namespace App\Repositories\DB;
 
 
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class MessageDB
@@ -23,9 +24,29 @@ class MessageDB
             ->orderBy('id', 'desc')
             ->whereNull('group_id')
             ->take(10)
-            ->with('sender')
+            ->with(['sender'])
             ->with('recipient')
             ->get();
+    }
+
+    public static function getAuthUserSoloDistinctMessages()
+    {
+
+//        $u = User::query()
+//            ->where('id', \auth()->id())
+//            ->with(['messages' => function ($q) {
+//                $q->where('recipient_id', \auth()->id())->orWhere('sender_id', \auth()->id())->orderBy('id', 'desc');
+//            }])->get();
+//        return $u;
+//        return Message::query()
+//            ->where('sender_id', Auth::id())
+//            ->orWhere('recipient_id', Auth::id())
+//            ->orderBy('id', 'desc')
+//            ->whereNull('group_id')
+//            ->with(['sender'])
+//            ->with('recipient')
+//            ->select( 'sender_id', 'recipient_id', 'body')
+//            ->get();
     }
 
     public static function getAuthUserGroupMessages()
@@ -62,7 +83,7 @@ class MessageDB
             ->orWhere('recipient_id', Auth::id())
             ->where('sender_id', $recipient_id)
             ->orWhere('recipient_id', $recipient_id)
-            ->orderBy('id', 'desc')
+            ->orderBy('created_at', 'desc')
             ->whereNull('group_id')
             ->take(20)
             ->with('sender')

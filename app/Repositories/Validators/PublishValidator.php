@@ -18,7 +18,7 @@ class PublishValidator
     public static function install()
     {
         $v = Validator::make(request()->all(), [
-            'msg' => 'required',
+            'msg' => 'required|max:1000',
             'from' => 'required',
             'to' => 'required',
             'type' => 'required'

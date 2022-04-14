@@ -10,6 +10,7 @@ namespace App\Repositories\Validators;
 
 
 use App\Exceptions\PublishMessageBadRequestException;
+use App\Services\DataFormatter;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,7 +23,8 @@ class ChannelCreateValidator
             'type' => 'required',
         ]);
         if ($v->fails()) {
-            return response()->json($v->getMessageBag(), Response::HTTP_BAD_REQUEST)->throwResponse();
+            $data = DataFormatter::shapeJsonResponseData(Response::HTTP_BAD_REQUEST, $v->errors()->first());
+            return response()->json($data, Response::HTTP_BAD_REQUEST)->throwResponse();
         }
     }
 }

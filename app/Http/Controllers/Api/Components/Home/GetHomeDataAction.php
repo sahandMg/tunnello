@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Components\AbstractComponent;
 use App\Repositories\DB\ChannelDB;
 use App\Repositories\DB\MessageDB;
 use App\Repositories\DB\UserDB;
+use Jenssegers\Agent\Agent;
 
 class GetHomeDataAction extends AbstractComponent
 {

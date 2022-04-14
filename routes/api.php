@@ -5,6 +5,7 @@ use App\Http\Controllers\Chat\ChatController;
 use App\Http\Controllers\Friend\FriendController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\JwtAuth\JwtAuthController;
+use App\Http\Controllers\Notif\WebNotifController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,10 @@ Route::middleware('auth')->group(function() {
     Route::prefix('friend/')->name('friend.')->group(function() {
         Route::post('add', [FriendController::class, 'PostFriendAddAction'])->name('add');
     });
+
+    Route::post('store-token', [WebNotifController::class, 'PostNotificationKeyStore'])->name('store.token');
+
+    Route::post('send-web-notification', [WebNotifController::class, 'PostNotificationSendAction'])->name('send.web-notification');
 
     Route::post('logout',[JwtAuthController::class, 'PostJwtLogoutAction'])->name('auth.logout');
 });

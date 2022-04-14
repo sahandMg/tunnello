@@ -17,7 +17,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Log::info(request()->has('phone'));
         $class = request('client') == 'web'? new ViewResponse() : new ApiResponse;
         Response::shouldProxyTo($class);
     }
