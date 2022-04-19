@@ -13,7 +13,7 @@ use App\Exceptions\PublishMessageBadRequestException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-
+use App\Services\DataFormatter;
 class AuthLoginValidator
 {
     public static function install()
@@ -24,7 +24,8 @@ class AuthLoginValidator
             'phone'                 => Rule::when(!request()->has('username'),['required', 'digits:11'])
         ]);
         if ($v->fails()) {
-            return response()->json($v->getMessageBag(), Response::HTTP_BAD_REQUEST)->throwResponse();
+            $data = DataFormatter::shapeJsonResponseData(Response::HTTP_BAD_REQUEST, $v->errors()->first());
+            return response()->json($data, Response::HTTP_BAD_REQUEST)->throwResponse();
         }
     }
 }

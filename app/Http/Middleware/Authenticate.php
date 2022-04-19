@@ -15,7 +15,7 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if ($request->isJson()) {
+        if ($request->wantsJson()) {
             throw new InvalidCredentialException();
         }else {
             return route('login');

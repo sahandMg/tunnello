@@ -30,9 +30,9 @@ class GetChannelListActionTest extends TestCase
         $recipient = User::find(2);
         $middleMan = User::find(3);
         $this->actingAs($sender);
-        PostChannelCreateAction::execute(['recipient_id' => $recipient->id, 'type' => 'solo']);
-        PostChannelCreateAction::execute(['recipient_id' => $middleMan->id, 'type' => 'solo']);
-        PostChannelCreateAction::execute(['recipient_id' => $middleMan->id, 'type' => 'group']);
+        PostChannelCreateAction::execute(['recipient_id' => encode($recipient->id), 'type' => 'solo']);
+        PostChannelCreateAction::execute(['recipient_id' => encode($middleMan->id), 'type' => 'solo']);
+        PostChannelCreateAction::execute(['recipient_id' => encode($middleMan->id), 'type' => 'group']);
         $resp = GetChannelListAction::execute();
         $c = SocketChannel::query()->get();
         $this->assertEquals(4, $c->count());

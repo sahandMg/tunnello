@@ -79,13 +79,13 @@ class MessageDB
     public static function getUserP2PMessages($recipient_id)
     {
         return Message::query()
-            ->where('sender_id', Auth::id())
-            ->orWhere('recipient_id', Auth::id())
+            ->where('sender_id',  Auth::id())
+            ->where('recipient_id',  $recipient_id)
+            ->orWhere('recipient_id',  Auth::id())
             ->where('sender_id', $recipient_id)
-            ->orWhere('recipient_id', $recipient_id)
             ->orderBy('created_at', 'desc')
             ->whereNull('group_id')
-            ->take(20)
+            ->take(50)
             ->with('sender')
             ->with('recipient')
             ->get();

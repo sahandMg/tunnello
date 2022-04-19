@@ -20,7 +20,7 @@ class WebNotifMedietor
         try{
             return $class_name::execute($args);
         }catch (\Exception $exception) {
-            dd($exception->getMessage(), $exception->getFile(), $exception->getLine());
+            return($exception->getMessage() .' '. $exception->getFile() .' '.$exception->getLine());
         }
     }
 }
