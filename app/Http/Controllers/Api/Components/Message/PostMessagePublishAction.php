@@ -19,7 +19,10 @@ class PostMessagePublishAction extends AbstractComponent
         $arguments['from'] = decode($arguments['from']);
         if ($arguments['type'] == 'solo') {
             $msg = MessageDB::createNewMessage($arguments['msg'], $arguments['to'], $arguments['from']);
-            MessageDB::updateMessageReplyId($msg->id, $arguments['message_id']);
+            if ($arguments['message_id'] != 'null') {
+                info((request()->all()));
+                MessageDB::updateMessageReplyId($msg->id, $arguments['message_id']);
+            }
             NewMessageEvent::dispatch(auth()->user(), UserDB::getUserById($arguments['to']), $msg);
             return $msg;
         }
