@@ -53,9 +53,10 @@ class ApiResponse
         return response()->json($data, Response::HTTP_OK);
     }
 
-    public function sendMessage()
+    public function sendMessage($msg)
     {
-        $data = DataFormatter::shapeJsonResponseData(Response::HTTP_OK, ResponseStates::OK);
+        $body = DataFormatter::modelShaper($msg, ['id','body']);
+        $data = DataFormatter::shapeJsonResponseData(Response::HTTP_OK, ResponseStates::OK, '', $body);
         return response()->json($data, Response::HTTP_OK);
     }
 

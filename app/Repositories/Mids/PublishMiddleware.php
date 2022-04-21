@@ -20,6 +20,6 @@ class PublishMiddleware
         if ($value instanceof \Exception) {
             return $value;
         }
-        return Response::sendMessage();
+        return Response::sendMessage($value);
     }
 }
