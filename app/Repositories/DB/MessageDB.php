@@ -23,7 +23,7 @@ class MessageDB
             ->orWhere('recipient_id', Auth::id())
             ->orderBy('id', 'desc')
             ->whereNull('group_id')
-            ->take(10)
+            ->take(100)
             ->with(['sender'])
             ->with('recipient')
             ->get();
@@ -71,6 +71,11 @@ class MessageDB
         return Message::query()->create(['body' => $body, 'recipient_id' => $recipientId, 'sender_id' => $senderId]);
     }
 
+    public static function updateMessageReplyId($messageId, $replyMessageId)
+    {
+        return Message::query()->where('id', $messageId)->update(['message_id' => $replyMessageId]);
+    }
+
     public static function createNewGroupMessage($body, int $groupId, int $senderId)
     {
         return Message::query()->create(['body' => $body, 'group_id' => $groupId, 'sender_id' => $senderId]);
@@ -85,7 +90,7 @@ class MessageDB
             ->where('sender_id', $recipient_id)
             ->orderBy('created_at', 'desc')
             ->whereNull('group_id')
-            ->take(50)
+            ->take(100)
             ->with('sender')
             ->with('recipient')
             ->get();
