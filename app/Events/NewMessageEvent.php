@@ -52,6 +52,7 @@ class NewMessageEvent implements ShouldBroadcast
             'sender_id'       => encode($this->user->id),
             'recipient_id'    => encode($this->recipient->id),
             'message'         => $this->message->body,
+            'reply_message_id'=> $this->message->message_id,
             'channel'         => channelId($this->user->id, $this->recipient->id),
             'on'              => now()->toDateTimeString(),
         ];
